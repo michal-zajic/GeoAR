@@ -28,8 +28,9 @@ namespace UnityARInterface
 			{
 				_cachedARPlane = arPlane;
 			}
-
-			returnARPlane(_cachedARPlane);
+			if (returnARPlane != null) {
+				returnARPlane(_cachedARPlane);
+			}
 		}
 	}
 }

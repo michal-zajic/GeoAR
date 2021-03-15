@@ -6,8 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Mapbox/MapboxAR/Examples/Scenes/TabletopAR.unity
-    guid: a455922b0e2954431922c9fb6c5377e4
+    path: Assets/Resources/Scenes/MainScene.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
   m_configObjects:
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 9a266d777b5e446ea9e3e1f9ee184c27,
       type: 2}

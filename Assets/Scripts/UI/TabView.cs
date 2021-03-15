@@ -4,15 +4,23 @@ using UnityEngine;
 
 public class TabView : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+    [SerializeField] Camera _camera = null;
+    [SerializeField] GameObject _objectToHide = null;
+    
+
+    public void SetActive(bool active) {
+        if (active)
+            ActivateCamera();
+        else
+            DeactivateCamera();
+
+        _objectToHide.SetActive(active);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    void ActivateCamera() {
+        _camera.tag = "MainCamera";
+    }
+    void DeactivateCamera() {
+        _camera.tag = "Untagged";
     }
 }

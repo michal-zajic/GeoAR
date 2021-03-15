@@ -20,7 +20,9 @@ namespace UnityARInterface
 
         private void OnDisable()
         {
-            m_ParticleSystem.SetParticles(m_NoParticles, 1);
+            if (m_ParticleSystem != null) {
+                m_ParticleSystem.SetParticles(m_NoParticles, 1);
+            }
         }
 
         // Use this for initialization

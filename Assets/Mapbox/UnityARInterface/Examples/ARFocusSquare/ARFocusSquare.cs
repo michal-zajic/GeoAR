@@ -21,6 +21,13 @@ namespace UnityARInterface
 		public LayerMask collisionLayerMask; 
 		public float findingSquareDist = 0.5f;
 
+		public Transform currentTransform {
+			get {
+				return squareState == FocusState.Found ? foundSquare.transform : findingSquare.transform;
+            }
+        }
+		public Vector3 lastPosition = new Vector3(0,0,0);
+
 		private FocusState squareState;
 		public FocusState SquareState { 
 			get {
@@ -58,6 +65,7 @@ namespace UnityARInterface
 			if (Physics.Raycast (ray, out hit, maxRayDistance, collisionLayerMask)) {
 				//we're going to get the position from the contact point
 				foundSquare.transform.position = hit.point;
+				lastPosition = hit.point;
 				Debug.Log (string.Format ("x:{0:0.######} y:{1:0.######} z:{2:0.######}", foundSquare.transform.position.x, foundSquare.transform.position.y, foundSquare.transform.position.z));
 
 				//and the rotation from the transform of the plane collider
@@ -77,6 +85,7 @@ namespace UnityARInterface
 
 					//position the focus finding square a distance from camera and facing up
 					findingSquare.transform.position = Camera.main.ScreenToWorldPoint(center);
+					lastPosition = findingSquare.transform.position;
 
 					//vector from camera to focussquare
 					Vector3 vecToCamera = findingSquare.transform.position - Camera.main.transform.position;

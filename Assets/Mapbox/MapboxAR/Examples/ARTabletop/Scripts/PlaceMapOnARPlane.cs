@@ -7,29 +7,25 @@ public class PlaceMapOnARPlane : MonoBehaviour
 	[SerializeField]
 	private Transform _mapTransform;
 
+	[SerializeField] ARFocusSquare _focusSquare = null;
+
+	LockMode _mode = LockMode.unlocked;
+
+
 	void Start()
 	{
-		ARPlaneHandler.returnARPlane += PlaceMap;
-		ARPlaneHandler.resetARPlane += ResetPlane;
+		//ARPlaneHandler.returnARPlane += PlaceMap;
+		//ARPlaneHandler.resetARPlane += ResetPlane;
 	}
 
-	void PlaceMap(BoundedPlane plane)
-	{
-		if (!_mapTransform.gameObject.activeSelf)
-		{
-			_mapTransform.gameObject.SetActive(true);
+	public void LockStateChangeTo(LockMode mode) {
+		_mode = mode; 
+    }
+
+    private void Update() {
+        if(_mode == LockMode.unlocked) {
+			//_mapTransform.position = _focusSquare.currentTransform.position;
+			_mapTransform.position = _focusSquare.lastPosition;
 		}
-
-		_mapTransform.position = plane.center;
-	}
-
-	void ResetPlane()
-	{
-		_mapTransform.gameObject.SetActive(false);
-	}
-
-	private void OnDisable()
-	{
-		ARPlaneHandler.returnARPlane -= PlaceMap;
-	}
+    }
 }
