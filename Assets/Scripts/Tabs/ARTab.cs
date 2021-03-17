@@ -34,9 +34,5 @@ public class ARTab : TabView
         _placer.LockStateChangeTo(_lockMode);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
 }
