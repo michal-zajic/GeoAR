@@ -16,7 +16,12 @@ public class AppState
     private static AppState _instance = null;
 
     public Vector2d currentMapCenter;
+    public Vector2d markerLocation;
+    public bool markerPlaced;
 
+    public void UpdateMarkerLocation(Vector2d location) {
+        markerLocation = location;
+    }
     public void UpdateMapCenter(Vector2d center) {
         currentMapCenter = center;
     }

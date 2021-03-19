@@ -54,7 +54,10 @@ public class ARTab : TabView
 
     void UpdateMapCenter() {
         Vector2d location;
-        if (_locationProvider.CurrentLocation.IsLocationServiceEnabled && Settings.instance.IsGPSDefault()) {
+        if (AppState.instance.markerPlaced) {
+            location = AppState.instance.markerLocation;
+        }
+        else if (_locationProvider.CurrentLocation.IsLocationServiceEnabled && Settings.instance.IsGPSDefault()) {
             location = _locationProvider.CurrentLocation.LatitudeLongitude;
         } else {
             location = AppState.instance.currentMapCenter;

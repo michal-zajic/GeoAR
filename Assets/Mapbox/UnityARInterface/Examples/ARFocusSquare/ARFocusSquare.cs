@@ -19,7 +19,7 @@ namespace UnityARInterface
 		//for editor version
 		public float maxRayDistance = 30.0f;
 		public LayerMask collisionLayerMask; 
-		public float findingSquareDist = 0.5f;
+		public float findingSquareDist = 2.0f;
 
 		public Transform currentTransform {
 			get {

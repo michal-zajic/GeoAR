@@ -9,43 +9,14 @@
 
 	public class ARTableTopCameraMovement : MonoBehaviour
 	{
-		[SerializeField]
-		[Range(.1f, 10f)]
-		public float _panSpeed = 1.0f;
-
-		[SerializeField]
-		float _zoomSpeed = 0.25f;
-
-		[SerializeField]
-		public Camera _referenceCamera;
-
-		[SerializeField]
-		AbstractMap _mapManager;
-
+		[SerializeField] Camera _camera = null;
 		private Vector3 _origin;
 		private Vector3 _mousePosition;
 		private Vector3 _mousePositionPrevious;
 		private bool _shouldDrag;
-		private bool _isInitialized = false;
-
-		void Awake()
-		{
-			if (null == _referenceCamera)
-			{
-				_referenceCamera = GetComponent<Camera>();
-				if (null == _referenceCamera) { Debug.LogErrorFormat("{0}: reference camera not set", this.GetType().Name); }
-			}
-			_mapManager.OnInitialized += () =>
-			{
-				_isInitialized = true;
-			};
-		}
-
 
 		private void LateUpdate()
 		{
-			if (!_isInitialized) { return; }
-
 			if (Input.touchSupported && Input.touchCount > 0)
 			{
 				HandleTouch();
@@ -61,10 +32,10 @@
 			// zoom
 			float scrollDelta = 0.0f;
 			scrollDelta = Input.GetAxis("Mouse ScrollWheel");
-			ZoomMapUsingTouchOrMouse(scrollDelta);
+			ScaleMapUsingTouchOrMouse(scrollDelta);
 
 			//pan mouse
-			PanMapUsingTouchOrMouse();
+			RotateMapUsingTouchOrMouse();
 		}
 
 		void HandleTouch()
@@ -75,7 +46,7 @@
 			{
 				case 1:
 					{
-						//PanMapUsingTouchOrMouse();
+						RotateMapUsingTouchOrMouse();
 					}
 					break;
 				case 2:
@@ -93,43 +64,30 @@
 						float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
 
 						// Find the difference in the distances between each frame.
-						zoomFactor = 0.01f * (touchDeltaMag - prevTouchDeltaMag);
+						zoomFactor = 0.004f * (touchDeltaMag - prevTouchDeltaMag);
 					}
-					ZoomMapUsingTouchOrMouse(zoomFactor);
+					ScaleMapUsingTouchOrMouse(zoomFactor);
 					break;
 				default:
 					break;
 			}
 		}
 
-		void ZoomMapUsingTouchOrMouse(float zoomFactor)
+		void ScaleMapUsingTouchOrMouse(float zoomFactor)
 		{
-			var zoom = Mathf.Max(0.0f, Mathf.Min(_mapManager.Zoom + zoomFactor * _zoomSpeed, 21.0f));
-
-			if (Math.Abs(zoom - _mapManager.Zoom) > 0.0f)
-			{
-				_mapManager.UpdateMap(_mapManager.CenterLatitudeLongitude, zoom);
-			}
+			gameObject.transform.localScale += new Vector3(zoomFactor, zoomFactor, zoomFactor);			
 		}
 
-		void PanMapUsingKeyBoard(float xMove, float zMove)
-		{
-			if (Math.Abs(xMove) > 0.0f || Math.Abs(zMove) > 0.0f)
-			{
-				// Get the number of degrees in a tile at the current zoom level.
-				// Divide it by the tile width in pixels ( 256 in our case)
-				// to get degrees represented by each pixel.
-				// Keyboard offset is in pixels, therefore multiply the factor with the offset to move the center.
-				float factor = (_panSpeed) * (Conversions.GetTileScaleInDegrees((float)_mapManager.CenterLatitudeLongitude.x, _mapManager.AbsoluteZoom));
-				var latitudeLongitude = new Vector2d(_mapManager.CenterLatitudeLongitude.x + zMove * factor * 2.0f, _mapManager.CenterLatitudeLongitude.y + xMove * factor * 4.0f);
-				_mapManager.UpdateMap(latitudeLongitude, _mapManager.Zoom);
-			}
-		}
 
-		void PanMapUsingTouchOrMouse()
+		void RotateMapUsingTouchOrMouse()
 		{
 			if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
 			{
+				var mapViewportPos = _camera.WorldToViewportPoint(transform.position);
+				if(!(mapViewportPos.x > 0 && mapViewportPos.x < 1 && mapViewportPos.y > 0 && mapViewportPos.y < 1)) {
+					return;
+                }
+								
 				var mousePosScreen = Input.mousePosition;
 				_mousePosition = mousePosScreen;
 
@@ -146,19 +104,21 @@
 
 			if (_shouldDrag == true)
 			{
-
+				var mapScreenPos = _camera.WorldToScreenPoint(transform.position);
 				var changeFromPreviousPosition = _mousePositionPrevious - _mousePosition;
-				if (Mathf.Abs(changeFromPreviousPosition.x) > 0.0f || Mathf.Abs(changeFromPreviousPosition.y) > 0.0f)
+				if (Mathf.Abs(changeFromPreviousPosition.x) > 0.0f)
 				{
 					_mousePositionPrevious = _mousePosition;
 
 					var offsetDelta = _origin - _mousePosition;
-					var offset = new Vector3(offsetDelta.x, 0f, offsetDelta.y);
-					offset = Camera.main.transform.rotation * offset;
+					var offset = offsetDelta.x;
 
-					if (Mathf.Abs(offset.x) > 0.0f || Mathf.Abs(offset.z) > 0.0f)
+					if (Mathf.Abs(offset) > 0.0f)
 					{
-						PanMapUsingKeyBoard(offset.x, offset.z);
+						if(mapScreenPos.y < _origin.y) {
+							offset *= -1;
+                        } 
+						transform.Rotate(Vector3.up, offset * 0.3f);
 					}
 					_origin = _mousePosition;
 				}
