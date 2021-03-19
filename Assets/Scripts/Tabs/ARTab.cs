@@ -1,5 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Mapbox.Unity.Location;
+using Mapbox.Unity.Map;
+using Mapbox.Utils;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,11 +12,18 @@ public enum LockMode {
 
 public class ARTab : TabView
 {
-    [SerializeField] PlaceMapOnARPlane _placer = null;
     [SerializeField] Button _lockButton = null;
     [SerializeField] Button _unlockButton = null;
+    [SerializeField] Button _updateButton = null;
 
+    [SerializeField] PlaceMapOnARPlane _placer = null;
+    [SerializeField] DeviceLocationProvider _locationProvider = null;
+    [SerializeField] AbstractMap _map = null;
+ 
     LockMode _lockMode = LockMode.unlocked;
+
+    bool _firstUpdate = false;
+    bool _mapInitialized = false;
     
     // Start is called before the first frame update
     void Start()
@@ -24,7 +34,15 @@ public class ARTab : TabView
         _lockButton.onClick.AddListener(() => {
             SetLockModeTo(LockMode.unlocked);
         });
+        _updateButton.onClick.AddListener(UpdateMapCenter);
+
         SetLockModeTo(LockMode.unlocked);
+
+        _map.OnInitialized += () => {
+            _mapInitialized = true;
+            if(_firstUpdate)
+                UpdateMapCenter();
+        };
     }
 
     void SetLockModeTo(LockMode mode) {
@@ -34,5 +52,24 @@ public class ARTab : TabView
         _placer.LockStateChangeTo(_lockMode);
     }
 
-    
+    void UpdateMapCenter() {
+        Vector2d location;
+        if (_locationProvider.CurrentLocation.IsLocationServiceEnabled && Settings.instance.IsGPSDefault()) {
+            location = _locationProvider.CurrentLocation.LatitudeLongitude;
+        } else {
+            location = AppState.instance.currentMapCenter;
+        }
+
+        _map.SetCenterLatitudeLongitude(location);
+        _map.UpdateMap();
+    }
+
+    protected override void OnTabSelection() {
+        base.OnTabSelection();
+        if(!_firstUpdate) {
+            if(_mapInitialized)
+                UpdateMapCenter();
+            _firstUpdate = true;
+        }
+    }
 }

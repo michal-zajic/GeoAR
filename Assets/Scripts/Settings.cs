@@ -41,6 +41,10 @@ public sealed class Settings {
         }
     }
 
+    public bool IsGPSDefault() {
+        return (bool)GetValue(Setting.gpsDefault);
+    }
+
     public string GetDescriptionFor(Setting setting) {
         switch (setting) {
             case Setting.zoomDefault:
