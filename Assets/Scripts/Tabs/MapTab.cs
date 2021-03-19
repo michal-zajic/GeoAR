@@ -39,6 +39,7 @@ public class MapTab : TabView {
 
     protected override void OnTabSelection() {
         base.OnTabSelection();
+        ResetLongPress();
     }
 
     void CenterOnUserLocation() {
@@ -135,6 +136,11 @@ public class MapTab : TabView {
     void InputCheck() {
         if (EventSystem.current.IsPointerOverGameObject()) {
             return;
+        }
+        foreach (var touch in Input.touches) {
+            if (EventSystem.current.IsPointerOverGameObject(touch.fingerId)) {
+                return;
+            }
         }
         if (Input.GetMouseButtonDown(0)) {
             OnPointerDown(Input.mousePosition);
