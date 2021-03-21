@@ -40,6 +40,9 @@ public class MapTab : TabView {
     protected override void OnTabSelection() {
         base.OnTabSelection();
         ResetLongPress();
+
+        ImagerySourceType type = (bool)Settings.instance.GetValue(Settings.Setting.useSatellite) ? ImagerySourceType.MapboxSatellite : ImagerySourceType.MapboxStreets;
+        _map.ImageLayer.SetProperties(type, true, false, true);
     }
 
     void CenterOnUserLocation() {

@@ -8,7 +8,8 @@ public sealed class Settings {
     public enum Setting {
         gpsDefault,
         moduleDefault,
-        zoomDefault
+        zoomDefault,
+        useSatellite
     }
 
     public static Settings instance {
@@ -104,6 +105,8 @@ public sealed class Settings {
                 return 3;
             case Setting.zoomDefault:
                 return 3;
+            case Setting.useSatellite:
+                return 0;
             default:
                 return -1;
         }
@@ -115,6 +118,7 @@ public sealed class Settings {
         _dict.Add(Setting.gpsDefault, false);
         _dict.Add(Setting.moduleDefault, "Mraky");
         _dict.Add(Setting.zoomDefault, "Střední");
+        _dict.Add(Setting.useSatellite, true);
 
         Save();
     }

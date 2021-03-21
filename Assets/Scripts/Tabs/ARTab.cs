@@ -86,5 +86,7 @@ public class ARTab : TabView
                 UpdateMapCenter();
             _firstUpdate = true;
         }
+        ImagerySourceType type = (bool)Settings.instance.GetValue(Settings.Setting.useSatellite) ? ImagerySourceType.MapboxSatelliteStreet : ImagerySourceType.MapboxStreets;
+        _map.ImageLayer.SetProperties(type, true, false, true);
     }
 }
