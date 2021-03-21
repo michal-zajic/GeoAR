@@ -12,6 +12,9 @@ namespace UnityARInterface
         [SerializeField]
         private int m_PlaneLayer;
 
+        [SerializeField]
+        GameObject _arPlanesParent;
+
         public int planeLayer { get { return m_PlaneLayer; } }
 
         private Dictionary<string, GameObject> m_Planes = new Dictionary<string, GameObject>();
@@ -31,12 +34,16 @@ namespace UnityARInterface
             ARInterface.planeRemoved -= PlaneRemovedHandler;
         }
 
+        public void TogglePlanes(bool active) {
+            _arPlanesParent.SetActive(active);
+        }
+        
         protected virtual void CreateOrUpdateGameObject(BoundedPlane plane)
         {
             GameObject go;
             if (!m_Planes.TryGetValue(plane.id, out go))
             {
-                go = Instantiate(m_PlanePrefab, GetRoot());
+                go = Instantiate(m_PlanePrefab, _arPlanesParent.transform/*GetRoot()*/);
 
                 // Make sure we can pick them later
                 foreach (var collider in go.GetComponentsInChildren<Collider>())

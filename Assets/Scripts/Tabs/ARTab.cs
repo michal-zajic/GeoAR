@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Mapbox.Unity.Location;
 using Mapbox.Unity.Map;
 using Mapbox.Utils;
+using UnityARInterface;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,6 +21,7 @@ public class ARTab : TabView
     [SerializeField] PlaceMapOnARPlane _placer = null;
     [SerializeField] DeviceLocationProvider _locationProvider = null;
     [SerializeField] AbstractMap _map = null;
+    [SerializeField] ARPlaneVisualizer _planeVis = null;
  
     LockMode _lockMode = LockMode.unlocked;
 
@@ -56,6 +58,7 @@ public class ARTab : TabView
         _unlockButton.gameObject.SetActive(_lockMode == LockMode.unlocked);
         _updateButton.gameObject.SetActive(_lockMode == LockMode.locked);
         _zoomSlider.gameObject.SetActive(_lockMode == LockMode.locked);
+        _planeVis.TogglePlanes(_lockMode == LockMode.unlocked);
         _placer.LockStateChangeTo(_lockMode);
     }
 

@@ -41,7 +41,7 @@ public class MapTab : TabView {
         base.OnTabSelection();
         ResetLongPress();
 
-        ImagerySourceType type = (bool)Settings.instance.GetValue(Settings.Setting.useSatellite) ? ImagerySourceType.MapboxSatellite : ImagerySourceType.MapboxStreets;
+        ImagerySourceType type = (bool)Settings.instance.GetValue(Settings.Setting.useSatellite) ? ImagerySourceType.MapboxSatelliteStreet : ImagerySourceType.MapboxStreets;
         _map.ImageLayer.SetProperties(type, true, false, true);
     }
 
