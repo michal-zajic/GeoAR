@@ -43,9 +43,9 @@ public class ARTab : TabView
 
         _map.OnInitialized += () => {
             _mapInitialized = true;
+            _zoomSlider.value = _zoomSlider.minValue + (_zoomSlider.maxValue - _zoomSlider.minValue) * Settings.instance.GetDefaultZoom();
             if (_firstUpdate) {
-                UpdateMapCenter();
-                _zoomSlider.value = _zoomSlider.minValue + (_zoomSlider.maxValue - _zoomSlider.minValue) * Settings.instance.GetDefaultZoom();
+                UpdateMapCenter();                
             }
         };
     }
