@@ -89,15 +89,15 @@ public class MapTab : TabView {
 
     void UpdateMarkerLocationIcon() {
         if (_marker.gameObject.activeInHierarchy)
-            _marker.position = GeoToScreenPoint(_markerPosition);
+            _marker.position = GeoToScreenPoint(_markerPosition) + new Vector2(0, 30);
     }
 
     void ProcessLongPress() {
         if(Vector2.Distance(_pressStartLocation, _pressLastLocation) < 10) {
             if (!_marker.gameObject.activeInHierarchy)
                 _marker.gameObject.SetActive(true);
-            _marker.position = _pressLastLocation + new Vector2(0, 20);
-            _markerPosition = ScreenToGeoPoint(_marker.position);
+            _marker.position = _pressLastLocation + new Vector2(0, 30);
+            _markerPosition = ScreenToGeoPoint(_pressLastLocation);
             AppState.instance.markerPlaced = true;
             AppState.instance.UpdateMarkerLocation(_markerPosition);
             PerformHapticFeedback();

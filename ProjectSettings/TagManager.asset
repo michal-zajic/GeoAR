@@ -6,6 +6,7 @@ TagManager:
   tags:
   - SettingsCanvas
   - MapCanvas
+  - MaskPlane
   layers:
   - Default
   - TransparentFX

@@ -487,6 +487,7 @@ namespace Mapbox.Unity.Map
 
 		protected virtual void Awake()
 		{
+			TileMaterial.renderQueue = 3000;
 			if (_previewOptions.isPreviewEnabled == true)
 			{
 				DisableEditorPreview();

@@ -33,7 +33,7 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 		}
 
 		public override void Run(VectorEntity ve, UnityTile tile)
-		{
+		{			
 			var min = Math.Min(_options.materials.Length, ve.MeshFilter.sharedMesh.subMeshCount);
 			var mats = new Material[min];
 
@@ -42,6 +42,8 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 				for (int i = 0; i < min; i++)
 				{
 					mats[i] = _options.customStyleOptions.materials[i].Materials[UnityEngine.Random.Range(0, _options.customStyleOptions.materials[i].Materials.Length)];
+					if (mats[i] != null)
+						mats[i].renderQueue = 3000 + i;
 				}
 			}
 			else if (_options.style == StyleTypes.Satellite)
@@ -49,6 +51,8 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 				for (int i = 0; i < min; i++)
 				{
 					mats[i] = Instantiate(_options.materials[i].Materials[UnityEngine.Random.Range(0, _options.materials[i].Materials.Length)]);
+					if (mats[i] != null)
+						mats[i].renderQueue = 3000 + i;
 				}
 
 				mats[0].mainTexture = tile.GetRasterData();
@@ -74,6 +78,8 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 				for (int i = 0; i < min; i++)
 				{
 					mats[i] = _options.materials[i].Materials[UnityEngine.Random.Range(0, _options.materials[i].Materials.Length)];
+					if(mats[i] != null)
+						mats[i].renderQueue = 3000 + i;
 					mats[i].SetFloat("_Mode", renderMode);
 				}
 			}

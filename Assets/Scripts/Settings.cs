@@ -45,6 +45,19 @@ public sealed class Settings {
         return (bool)GetValue(Setting.gpsDefault);
     }
 
+    public float GetDefaultZoom() {
+        switch (GetValue(Setting.zoomDefault)) {
+            case "Maximální":
+                return 1;                
+            case "Střední":
+                return 0.5f;
+            case "Minimální":
+                return 0;
+            default:
+                return 0;                
+        }
+    }
+
     public string GetDescriptionFor(Setting setting) {
         switch (setting) {
             case Setting.zoomDefault:

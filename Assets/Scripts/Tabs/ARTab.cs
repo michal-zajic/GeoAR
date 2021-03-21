@@ -15,6 +15,7 @@ public class ARTab : TabView
     [SerializeField] Button _lockButton = null;
     [SerializeField] Button _unlockButton = null;
     [SerializeField] Button _updateButton = null;
+    [SerializeField] Slider _zoomSlider = null;
 
     [SerializeField] PlaceMapOnARPlane _placer = null;
     [SerializeField] DeviceLocationProvider _locationProvider = null;
@@ -36,12 +37,16 @@ public class ARTab : TabView
         });
         _updateButton.onClick.AddListener(UpdateMapCenter);
 
+        _zoomSlider.onValueChanged.AddListener(ZoomChanged);
+                
         SetLockModeTo(LockMode.unlocked);
 
         _map.OnInitialized += () => {
             _mapInitialized = true;
-            if(_firstUpdate)
+            if (_firstUpdate) {
                 UpdateMapCenter();
+                _zoomSlider.value = _zoomSlider.minValue + (_zoomSlider.maxValue - _zoomSlider.minValue) * Settings.instance.GetDefaultZoom();
+            }
         };
     }
 
@@ -49,7 +54,14 @@ public class ARTab : TabView
         _lockMode = mode;
         _lockButton.gameObject.SetActive(_lockMode == LockMode.locked);
         _unlockButton.gameObject.SetActive(_lockMode == LockMode.unlocked);
+        _updateButton.gameObject.SetActive(_lockMode == LockMode.locked);
+        _zoomSlider.gameObject.SetActive(_lockMode == LockMode.locked);
         _placer.LockStateChangeTo(_lockMode);
+    }
+
+    void ZoomChanged(float zoom) {
+        _map.SetZoom(zoom);
+        _map.UpdateMap();
     }
 
     void UpdateMapCenter() {

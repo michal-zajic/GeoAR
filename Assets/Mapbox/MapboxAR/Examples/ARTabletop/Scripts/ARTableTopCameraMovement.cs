@@ -15,8 +15,21 @@
 		private Vector3 _mousePositionPrevious;
 		private bool _shouldDrag;
 
+		private bool clickedOk = false;
+
 		private void LateUpdate()
 		{
+            if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject()) {
+				foreach (var touch in Input.touches) {
+					if (EventSystem.current.IsPointerOverGameObject(touch.fingerId)) {
+						return;
+					}
+				}
+				clickedOk = true;
+            }
+            if (Input.GetMouseButtonUp(0) && Input.touchCount < 2) {
+				clickedOk = false;
+            }
 			if (Input.touchSupported && Input.touchCount > 0)
 			{
 				HandleTouch();
@@ -81,8 +94,8 @@
 
 		void RotateMapUsingTouchOrMouse()
 		{
-			if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
-			{
+            if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject() && clickedOk)
+			{				
 				var mapViewportPos = _camera.WorldToViewportPoint(transform.position);
 				if(!(mapViewportPos.x > 0 && mapViewportPos.x < 1 && mapViewportPos.y > 0 && mapViewportPos.y < 1)) {
 					return;
@@ -103,7 +116,7 @@
 			}
 
 			if (_shouldDrag == true)
-			{
+			{				
 				var mapScreenPos = _camera.WorldToScreenPoint(transform.position);
 				var changeFromPreviousPosition = _mousePositionPrevious - _mousePosition;
 				if (Mathf.Abs(changeFromPreviousPosition.x) > 0.0f)
