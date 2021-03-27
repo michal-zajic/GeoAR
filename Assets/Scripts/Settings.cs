@@ -37,6 +37,12 @@ public sealed class Settings {
         switch (setting) {
             case Setting.zoomDefault:
                 return new List<string> { "Maximální", "Střední", "Minimální" };
+            case Setting.moduleDefault:
+                List<string> list = new List<string> { "Žádný" };
+                Finder.moduleMgr.modules.ForEach(module => {
+                    list.Add(module.name);
+                });
+                return list;
             default:
                 return null;
         }
@@ -112,13 +118,27 @@ public sealed class Settings {
         }
     }
 
+    private object GetDefaultFor(Setting setting) {
+        switch(setting) {
+            case Setting.gpsDefault:
+                return false;
+            case Setting.zoomDefault:
+                return "Střední";
+            case Setting.moduleDefault:
+                return "Žádný";
+            case Setting.useSatellite:
+                return true;
+            default:
+                return null;
+        }
+    }
+
     private void SetDefaults() {
         _dict = new Dictionary<Setting, object>();
 
-        _dict.Add(Setting.gpsDefault, false);
-        _dict.Add(Setting.moduleDefault, "Mraky");
-        _dict.Add(Setting.zoomDefault, "Střední");
-        _dict.Add(Setting.useSatellite, true);
+        foreach (Setting setting in Enum.GetValues(typeof(Setting))) {
+            _dict.Add(setting, GetDefaultFor(setting));
+        }
 
         Save();
     }
@@ -153,13 +173,19 @@ public sealed class Settings {
                         Add(setting, json.GetField(setting.ToString()).f);
                         break;
                     case 3:
-                        Add(setting, json.GetField(setting.ToString()).str);
+                        if (!GetItemsFor(setting).Contains(json.GetField(setting.ToString()).str)) {
+                            Add(setting, GetItemsFor(setting)[0]);
+                        } else {
+                            Add(setting, json.GetField(setting.ToString()).str);
+                        }
                         break;
                     default:
                         Add(setting, json.GetField(setting.ToString()));
                         break;
                 }
 
+            } else {
+                Add(setting, GetDefaultFor(setting));
             }
         }
     }

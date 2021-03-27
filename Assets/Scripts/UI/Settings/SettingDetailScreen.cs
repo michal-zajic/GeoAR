@@ -16,12 +16,11 @@ public class SettingDetailScreen : MonoBehaviour
     string _currentItem = "";
     List<SettingDetailItem> details;
 
-    public void Initialize(string title, string description, List<string> items, string currentItem, UnityAction<string> onFinish) {
+    public void Initialize(string title, string description, List<string> items, string currentItem, UnityAction<string> onClick) {
         _headlineText.text = title;
         _currentItem = currentItem;
         _descriptionText.text = description;
         _navigationBackButton.onClick.AddListener(() => {
-            onFinish(currentItem);
             Dismiss();
         });
 
@@ -36,6 +35,7 @@ public class SettingDetailScreen : MonoBehaviour
                     obj.UpdateChanged(false);
                 });
                 detail.UpdateChanged(true);
+                onClick(currentItem);
             });
         });
 
@@ -47,7 +47,7 @@ public class SettingDetailScreen : MonoBehaviour
         float destX = movingIn ? 0 : GameObject.Find("UI").GetComponent<RectTransform>().rect.width;
         while (rt.anchoredPosition.x != destX) {
             Vector2 pos = rt.anchoredPosition;
-            rt.anchoredPosition = new Vector2(pos.x + Mathf.Sign(destX - pos.x) * 200, pos.y);
+            rt.anchoredPosition = new Vector2(pos.x + Mathf.Sign(destX - pos.x) * 100, pos.y);
 
             if(rt.anchoredPosition.x < destX && movingIn) {
                 rt.anchoredPosition = new Vector2(destX, pos.y);

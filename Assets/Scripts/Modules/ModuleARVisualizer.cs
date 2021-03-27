@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Mapbox.Unity.Map;
 using UnityEngine;
 
-public class RecycleVisualizer : ModuleVisualizer
+public class ModuleARVisualizer : ModuleVisualizer
 {
     public override void Disable() {
         throw new System.NotImplementedException();
@@ -15,7 +15,5 @@ public class RecycleVisualizer : ModuleVisualizer
 
     public override void Prepare(ModuleDataLoader data, AbstractMap map) {
         throw new System.NotImplementedException();
-    }
-
-    
+    }    
 }

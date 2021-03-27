@@ -25,10 +25,4 @@ public class TabBar : MonoBehaviour
             _tabBarButtons[i].SetActive(i == idx);
         }
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

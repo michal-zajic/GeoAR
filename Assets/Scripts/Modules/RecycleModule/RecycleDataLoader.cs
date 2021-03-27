@@ -2,11 +2,67 @@
 using System.Collections.Generic;
 using Mapbox.Utils;
 using UnityEngine;
+using System;
+using UnityEngine.Networking;
+using System.Globalization;
 
 public class RecycleDataLoader : ModuleDataLoader
 {
-    public override JSONObject GetDataFor(Vector2d location, float range = 0) {
-        throw new System.NotImplementedException();
+    string baseAddress = "https://api.golemio.cz/v2/sortedwastestations/?";
+
+    public List<Container> containers { get; private set; }
+
+    public override void GetDataFor(Vector2d location, float range = 0, Action onFinish = null) {
+        StartCoroutine(LoadJSON(location, range, onFinish));
     }
 
+    IEnumerator LoadJSON(Vector2d location, float range, Action onFinish) {
+        string locationString = "latlng=" + location.x + "%2C" + location.y + "&";
+        string rangeString = "range=" + range;
+        Uri address = new Uri(baseAddress + locationString + rangeString);
+
+        UnityWebRequest request = UnityWebRequest.Get(address);
+        request.SetRequestHeader("x-access-token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1lZ3JheG9uMjJAZ21haWwuY29tIiwiaWQiOjY5NCwibmFtZSI6bnVsbCwic3VybmFtZSI6bnVsbCwiaWF0IjoxNjE1NjU0NTM3LCJleHAiOjExNjE1NjU0NTM3LCJpc3MiOiJnb2xlbWlvIiwianRpIjoiMmZhYTM1NmItZDMzOC00YTYwLWE2ZWYtNjJkYjQ1ZDVlMWZkIn0.52nQNk3umt8GnOGUABnfEDjxQvpLjOin-l07iV1WJfM");
+
+        yield return request.SendWebRequest();
+
+        if (request.isNetworkError || request.isHttpError) {
+            Debug.Log(request.error);
+            yield break;
+        }
+        string s = request.downloadHandler.text;
+        JSONObject json = new JSONObject(s);
+
+        ProcessJSON(json, onFinish);
+    }
+
+    void ProcessJSON(JSONObject json, Action onFinish) {
+        containers = new List<Container>();
+
+        if (json.HasField("features")) {
+            JSONObject features = json.GetField("features");
+            foreach(JSONObject feature in features.list) {
+                Container container = new Container();
+
+                JSONObject coords = feature["geometry"]["coordinates"];
+                float lat = coords.list[0].f;
+                float lon = coords.list[1].f;
+                container.coordinates = new Vector2d(lat, lon);
+
+                JSONObject properties = feature["properties"];
+                container.accessibility = (Container.Accessibility)properties["accessibility"]["id"].i;
+
+                container.trashTypes = new List<Container.TrashType>();
+                JSONObject bins = properties["containers"];
+                foreach(JSONObject bin in bins.list) {
+                    container.trashTypes.Add((Container.TrashType)bin["trash_type"]["id"].i);
+                }
+
+                containers.Add(container);
+            }
+        }
+        if(onFinish != null)
+            onFinish();
+    }
+    
 }

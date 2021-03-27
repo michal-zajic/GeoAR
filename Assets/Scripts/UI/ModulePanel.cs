@@ -9,11 +9,13 @@ public class ModulePanel : MonoBehaviour
     [SerializeField] Transform _contentRect = null;
     [SerializeField] Button _backButton = null;
     [SerializeField] Button _miniPanelButton = null;
+    [SerializeField] Image _miniPanelModuleImage = null;
+    [SerializeField] Sprite _cancelIcon = null;
 
     List<ModulePanelEntry> _entries = new List<ModulePanelEntry>();
 
     RectTransform _rt;
-    float speed = 200;
+    float speed = 100;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,7 +23,7 @@ public class ModulePanel : MonoBehaviour
         Finder.moduleMgr.modules.ForEach((module) => {
             GameObject obj = Instantiate(_moduleEntryPrefab, _contentRect);
             ModulePanelEntry entry = obj.GetComponent<ModulePanelEntry>();
-            entry.Init(module.GetName(), module.GetDescription(), module.GetIcon(), ModuleClicked);
+            entry.Init(module.GetName(), module.GetDescription(), module.GetIcon(), ModuleClicked);            
             _entries.Add(entry);
         });
         _backButton.onClick.AddListener(() => {
@@ -30,6 +32,11 @@ public class ModulePanel : MonoBehaviour
         _miniPanelButton.onClick.AddListener(() => {
             Summon();
         });
+        if (Finder.moduleMgr.activeModule == null) {
+            _miniPanelModuleImage.sprite = _cancelIcon;
+        } else {
+            ModuleClicked(Finder.moduleMgr.activeModule.name);
+        }
     }
 
     void ModuleClicked(string name) {
@@ -38,9 +45,11 @@ public class ModulePanel : MonoBehaviour
                 if (entry.active) {
                     entry.SetActive(false);
                     Finder.moduleMgr.SetActiveModule(null);
+                    _miniPanelModuleImage.sprite = _cancelIcon;
                 } else {
                     entry.SetActive(true);
                     Finder.moduleMgr.SetActiveModule(entry.name);
+                    _miniPanelModuleImage.sprite = Finder.moduleMgr.activeModule.GetIcon();
                 }
             } else {
                 entry.SetActive(false);                

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Mapbox.Unity.Map;
 using UnityEngine;
 
 public class ModuleMgr : MonoBehaviour
@@ -25,6 +26,12 @@ public class ModuleMgr : MonoBehaviour
                 modules[modules.Count - 1].Init();
             }
         }
+
+        string defaultModule = (string)Settings.instance.GetValue(Settings.Setting.moduleDefault);
+        modules.ForEach(module => {
+            if (module.name == defaultModule)
+                SetActiveModule(defaultModule);
+        });
     }
 
     public void SetActiveModule(string moduleName) {
@@ -36,5 +43,17 @@ public class ModuleMgr : MonoBehaviour
                 activeModule = module;
             }
         });
+    }
+
+    public void VisualizeOnMap(AbstractMap map) {
+
+    }
+
+    public void VisualizeAROnMap(AbstractMap map) {
+        if (activeModule != null) {
+            activeModule.dataLoader.GetDataFor(map.CenterLatitudeLongitude, 580, () => {
+                activeModule.arVisualizer.Prepare(activeModule.dataLoader, map);
+            });
+        }
     }
 }

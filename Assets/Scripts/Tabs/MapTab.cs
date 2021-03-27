@@ -43,6 +43,7 @@ public class MapTab : TabView {
 
         ImagerySourceType type = (bool)Settings.instance.GetValue(Settings.Setting.useSatellite) ? ImagerySourceType.MapboxSatelliteStreet : ImagerySourceType.MapboxStreets;
         _map.ImageLayer.SetProperties(type, true, false, true);
+        Finder.uiMgr.SetModulePanel(true);
     }
 
     void CenterOnUserLocation() {
@@ -104,6 +105,9 @@ public class MapTab : TabView {
             AppState.instance.markerPlaced = true;
             AppState.instance.UpdateMarkerLocation(_markerPosition);
             PerformHapticFeedback();
+
+            if(Finder.moduleMgr.activeModule != null)
+                Finder.moduleMgr.activeModule.dataLoader.GetDataFor(_markerPosition, 200);
         }
 
         ResetLongPress();

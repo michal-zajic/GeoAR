@@ -27,7 +27,7 @@ public class ARTab : TabView
 
     bool _firstUpdate = false;
     bool _mapInitialized = false;
-    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -37,11 +37,15 @@ public class ARTab : TabView
         _lockButton.onClick.AddListener(() => {
             SetLockModeTo(LockMode.unlocked);
         });
-        _updateButton.onClick.AddListener(UpdateMapCenter);
+        _updateButton.onClick.AddListener(()=> {
+            UpdateMapCenter();
+            VisualizeData();
+        });
 
         _zoomSlider.onValueChanged.AddListener(ZoomChanged);
                 
         SetLockModeTo(LockMode.unlocked);
+        Finder.uiMgr.SetModulePanel(true);
 
         _map.OnInitialized += () => {
             _mapInitialized = true;
@@ -60,11 +64,17 @@ public class ARTab : TabView
         _zoomSlider.gameObject.SetActive(_lockMode == LockMode.locked);
         _planeVis.TogglePlanes(_lockMode == LockMode.unlocked);
         _placer.LockStateChangeTo(_lockMode);
+
+        Finder.uiMgr.SetModulePanel(_lockMode == LockMode.locked);
     }
 
     void ZoomChanged(float zoom) {
         _map.SetZoom(zoom);
         _map.UpdateMap();
+    }
+
+    void VisualizeData() {
+        Finder.moduleMgr.VisualizeAROnMap(_map);
     }
 
     void UpdateMapCenter() {
@@ -91,5 +101,7 @@ public class ARTab : TabView
         }
         ImagerySourceType type = (bool)Settings.instance.GetValue(Settings.Setting.useSatellite) ? ImagerySourceType.MapboxSatelliteStreet : ImagerySourceType.MapboxStreets;
         _map.ImageLayer.SetProperties(type, true, false, true);
+
+        Finder.uiMgr.SetModulePanel(_lockMode == LockMode.locked);
     }
 }

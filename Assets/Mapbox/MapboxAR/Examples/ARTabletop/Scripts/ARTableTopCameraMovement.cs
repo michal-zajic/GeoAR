@@ -19,12 +19,7 @@
 
 		private void LateUpdate()
 		{
-            if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject()) {
-				foreach (var touch in Input.touches) {
-					if (EventSystem.current.IsPointerOverGameObject(touch.fingerId)) {
-						return;
-					}
-				}
+            if (Input.GetMouseButtonDown(0) && !TouchHandler.IsTouchingUI()) {				
 				clickedOk = true;
             }
             if (Input.GetMouseButtonUp(0) && Input.touchCount < 2) {
@@ -94,7 +89,7 @@
 
 		void RotateMapUsingTouchOrMouse()
 		{
-            if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject() && clickedOk)
+            if (Input.GetMouseButton(0) && !TouchHandler.IsTouchingUI() && clickedOk)
 			{				
 				var mapViewportPos = _camera.WorldToViewportPoint(transform.position);
 				if(!(mapViewportPos.x > 0 && mapViewportPos.x < 1 && mapViewportPos.y > 0 && mapViewportPos.y < 1)) {
@@ -137,7 +132,7 @@
 				}
 				else
 				{
-					if (EventSystem.current.IsPointerOverGameObject())
+					if (TouchHandler.IsTouchingUI())
 					{
 						return;
 					}

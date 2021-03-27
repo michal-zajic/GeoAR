@@ -48,7 +48,7 @@
 
 		public void Update()
 		{
-			if (Input.GetMouseButtonDown(0) && EventSystem.current.IsPointerOverGameObject())
+			if (Input.GetMouseButtonDown(0) && TouchHandler.IsTouchingUI())
 			{
 				_dragStartedOnUI = true;
 			}
@@ -182,7 +182,7 @@
 				Debug.Log("Latitude: " + latlongDelta.x + " Longitude: " + latlongDelta.y);
 			}
 
-			if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
+			if (Input.GetMouseButton(0) && !TouchHandler.IsTouchingUI())
 			{
 				var mousePosScreen = Input.mousePosition;
 				//assign distance of camera to ground plane to z, otherwise ScreenToWorldPoint() will always return the position of the camera
@@ -224,7 +224,7 @@
 				}
 				else
 				{
-					if (EventSystem.current.IsPointerOverGameObject())
+					if (TouchHandler.IsTouchingUI())
 					{
 						return;
 					}
@@ -236,7 +236,7 @@
 
 		void UseDegreeConversion()
 		{
-			if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
+			if (Input.GetMouseButton(0) && !TouchHandler.IsTouchingUI())
 			{
 				var mousePosScreen = Input.mousePosition;
 				//assign distance of camera to ground plane to z, otherwise ScreenToWorldPoint() will always return the position of the camera
@@ -281,7 +281,7 @@
 				}
 				else
 				{
-					if (EventSystem.current.IsPointerOverGameObject())
+					if (TouchHandler.IsTouchingUI())
 					{
 						return;
 					}
