@@ -8,7 +8,7 @@ public class RecycleARVisualizer : ModuleARVisualizer
 {
     List<GameObject> objects;
     public override void Disable() {
-        throw new System.NotImplementedException();
+        DestroyObjects();
     }
 
     public override void Enable() {

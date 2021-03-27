@@ -35,6 +35,11 @@ public class ModuleMgr : MonoBehaviour
     }
 
     public void SetActiveModule(string moduleName) {
+        if(activeModule != null) {
+            activeModule.arVisualizer.Disable();
+            activeModule.visualizer.Disable();
+        }
+
         if(moduleName == null) {
             activeModule = null;
         }
