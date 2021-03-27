@@ -21,9 +21,10 @@ public class RecycleARVisualizer : ModuleARVisualizer
         RecycleDataLoader loader = data as RecycleDataLoader;
         foreach(Container container in loader.containers) {
             GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-            obj.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+            obj.transform.localScale = 0.05f * map.transform.localScale;
             obj.transform.position = map.GeoToWorldPosition(new Vector2d(container.coordinates.y, container.coordinates.x));
             obj.transform.SetParent(map.transform);
+            obj.tag = "ModuleObject";
             objects.Add(obj);
         }
     }

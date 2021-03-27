@@ -12,21 +12,19 @@ public class HideOnCollision : MonoBehaviour
     private void OnTriggerEnter(Collider collision) {
         if(collision.tag == "MaskPlane" || collision.gameObject.layer == LayerMask.NameToLayer("ARGameObject")) {
             return;
-        }
-        //collision.gameObject.GetComponent<Renderer>().enabled = false;
-        collision.gameObject.SetActive(false);
+        } else if (collision.tag == "ModuleObject") {
+            collision.GetComponent<MeshRenderer>().enabled = false;
+        } else
+            collision.gameObject.SetActive(false);
     }
     private void OnTriggerExit(Collider collision) {
         if (collision.tag == "MaskPlane") {
             return;
         }
-        collision.gameObject.SetActive(true);
+        else if(collision.tag == "ModuleObject") {
+            collision.GetComponent<MeshRenderer>().enabled = true;
+        } else
+            collision.gameObject.SetActive(true);
         //collision.gameObject.GetComponent<Renderer>().enabled = true;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
