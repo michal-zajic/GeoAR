@@ -13,6 +13,7 @@ public class MapTab : TabView {
     [SerializeField] Image _userLocationImage = null;
     [SerializeField] RectTransform _marker = null;
     [SerializeField] Button _locationButton = null;
+    [SerializeField] Button _updateButton = null;
 
     bool _firstUpdate = false;
     bool _pressedDown = false;
@@ -34,6 +35,7 @@ public class MapTab : TabView {
         _map.OnUpdated += OnMapUpdated;
         _marker.gameObject.SetActive(false);
         _locationButton.onClick.AddListener(CenterOnUserLocation);
+        _updateButton.onClick.AddListener(() => { Finder.moduleMgr.VisualizeOnMap(_map); });
         SendLocationToState(_map.CenterLatitudeLongitude);
     }
 
@@ -60,6 +62,8 @@ public class MapTab : TabView {
 
     void OnMapUpdated() {
         SendLocationToState(_map.CenterLatitudeLongitude);
+
+        _updateButton.interactable = _map.Zoom > 14;
     }
 
     Vector2d ScreenToGeoPoint(Vector2 screenPos) {
@@ -137,7 +141,7 @@ public class MapTab : TabView {
             if(_longPressTime >= _requiredLongPressTime) {
                 ProcessLongPress();
             }
-        }
+        }               
     }
 
     void InputCheck() {

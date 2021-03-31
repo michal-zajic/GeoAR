@@ -8,17 +8,22 @@ using System.Globalization;
 
 public class RecycleDataLoader : ModuleDataLoader
 {
-    string baseAddress = "https://api.golemio.cz/v2/sortedwastestations/?";
+    string baseAddress = "https://api.golemio.cz/v2/sortedwastestations/";
 
     public List<Container> containers { get; private set; }
+    public List<Container> arContainers { get; private set; }
 
-    public override void GetDataFor(Vector2d location, float range = 0, Action onFinish = null) {
-        StartCoroutine(LoadJSON(location, range, onFinish));
+    public override void GetDataFor(Vector2d location, float range = 0, Action onFinish = null, bool ar = true) {
+        StartCoroutine(LoadJSON(location, range, onFinish, ar));
     }
 
-    IEnumerator LoadJSON(Vector2d location, float range, Action onFinish) {
-        string locationString = "latlng=" + location.x + "%2C" + location.y + "&";
-        string rangeString = "range=" + range;
+    IEnumerator LoadJSON(Vector2d location, float range, Action onFinish, bool ar) {
+        string locationString = "";
+        string rangeString = "";
+        if (range > 0) {
+            locationString = "?latlng=" + location.x + "%2C" + location.y + "&";
+            rangeString = "range=" + range;
+        }
         Uri address = new Uri(baseAddress + locationString + rangeString);
 
         UnityWebRequest request = UnityWebRequest.Get(address);
@@ -28,18 +33,22 @@ public class RecycleDataLoader : ModuleDataLoader
 
         if (request.isNetworkError || request.isHttpError) {
             Debug.Log(request.error);
-            StartCoroutine(LoadJSON(location, range, onFinish));
+            StartCoroutine(LoadJSON(location, range, onFinish, ar));
             yield break;            
         } else {
             string s = request.downloadHandler.text;
             JSONObject json = new JSONObject(s);
 
-            ProcessJSON(json, onFinish);
+            StartCoroutine(ProcessJSON(json, onFinish, ar));
         }
     }
 
-    void ProcessJSON(JSONObject json, Action onFinish) {
-        containers = new List<Container>();
+    IEnumerator ProcessJSON(JSONObject json, Action onFinish, bool ar) {
+        if (ar)
+            arContainers = new List<Container>();
+        else
+            containers = new List<Container>();
+        int i = 0;
 
         if (json.HasField("features")) {
             JSONObject features = json.GetField("features");
@@ -60,7 +69,11 @@ public class RecycleDataLoader : ModuleDataLoader
                     container.trashTypes.Add((Container.TrashType)bin["trash_type"]["id"].i);
                 }
 
-                containers.Add(container);
+                (ar ? arContainers : containers).Add(container);
+
+                i++;
+                if (i % 10 == 0)
+                    yield return null;
             }
         }
         if(onFinish != null)
