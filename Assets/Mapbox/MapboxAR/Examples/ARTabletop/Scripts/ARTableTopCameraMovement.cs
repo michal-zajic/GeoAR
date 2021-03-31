@@ -83,7 +83,10 @@
 
 		void ScaleMapUsingTouchOrMouse(float zoomFactor)
 		{
-			gameObject.transform.localScale += new Vector3(zoomFactor, zoomFactor, zoomFactor);			
+			gameObject.transform.localScale += new Vector3(zoomFactor, zoomFactor, zoomFactor);
+			if(gameObject.transform.localScale.x < 0.015) {
+				gameObject.transform.localScale = new Vector3(0.015f, 0.015f, 0.015f);
+            }
 		}
 
 

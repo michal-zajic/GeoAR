@@ -6,9 +6,11 @@ using UnityEngine;
 public class RecycleVisualizer : ModuleVisualizer
 {
     public override void Disable() {
+
     }
 
     public override void Enable() {
+
     }
 
     public override void Draw(ModuleDataLoader data, AbstractMap map) {
