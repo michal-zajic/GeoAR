@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Mapbox.Unity.Map;
+using Mapbox.Utils;
 using UnityEngine;
 
 public class ModuleMgr : MonoBehaviour
@@ -11,6 +12,11 @@ public class ModuleMgr : MonoBehaviour
     public List<Module> modules { get; private set; }
 
     public Module activeModule = null;
+
+    private Vector2d lastCoord;
+    private Vector2d lastCoordAR;
+    private AbstractMap map = null;
+    private AbstractMap arMap = null;
 
     // Start is called before the first frame update
     void Start()
@@ -46,18 +52,45 @@ public class ModuleMgr : MonoBehaviour
         modules.ForEach((module) => {
             if(module.name == moduleName) {
                 activeModule = module;
+
+                EnableVisualizer(true);
+                EnableVisualizer(false);
             }
         });
     }
 
     public void VisualizeOnMap(AbstractMap map) {
-
+        this.map = map;
+        lastCoord = map.CenterLatitudeLongitude;
+        UpdateAndDrawData(false);
     }
 
     public void VisualizeAROnMap(AbstractMap map) {
-        if (activeModule != null) {
-            activeModule.dataLoader.GetDataFor(map.CenterLatitudeLongitude, 580, () => {
-                activeModule.arVisualizer.Prepare(activeModule.dataLoader, map);
+        arMap = map;
+        lastCoordAR = map.CenterLatitudeLongitude;
+        UpdateAndDrawData(true);
+    }
+
+    //If coordinates didnt change, just enable the objects, otherwise reload data
+    private void EnableVisualizer(bool ar) {
+        ModuleVisualizer vis = ar ? activeModule.arVisualizer : activeModule.visualizer;
+        if(vis.lastCoord.Equals(ar ? lastCoordAR : lastCoord)) {
+            vis.Enable();
+        } else {
+            UpdateAndDrawData(ar);
+        }
+    }
+
+    //Refreshes data on new map coordinates
+    private void UpdateAndDrawData(bool ar) {
+        AbstractMap currentMap = ar ? arMap : map;        
+        if (activeModule != null && currentMap != null) {
+            ModuleVisualizer vis = ar ? activeModule.arVisualizer : activeModule.visualizer;
+            Vector2d center = (ar ? arMap : map).CenterLatitudeLongitude;
+            vis.lastCoord = center;
+
+            activeModule.dataLoader.GetDataFor(center, 580, () => {                
+                vis.Draw(activeModule.dataLoader, currentMap);
             });
         }
     }

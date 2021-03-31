@@ -58,6 +58,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 933d91506212845cba1c7091e878c580, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lastCoord:
+    x: 0
+    y: 0
 --- !u!114 &4401909037614257931
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,3 +91,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cfb721e0af174c36bf5cf2adef45b4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lastCoord:
+    x: 0
+    y: 0
+  _containerObject: {fileID: 8692375911280642073, guid: cddae99905aa940afaea2bc62eb31125,
+    type: 3}

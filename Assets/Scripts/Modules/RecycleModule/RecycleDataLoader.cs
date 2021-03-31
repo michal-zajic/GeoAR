@@ -28,12 +28,14 @@ public class RecycleDataLoader : ModuleDataLoader
 
         if (request.isNetworkError || request.isHttpError) {
             Debug.Log(request.error);
-            yield break;
-        }
-        string s = request.downloadHandler.text;
-        JSONObject json = new JSONObject(s);
+            StartCoroutine(LoadJSON(location, range, onFinish));
+            yield break;            
+        } else {
+            string s = request.downloadHandler.text;
+            JSONObject json = new JSONObject(s);
 
-        ProcessJSON(json, onFinish);
+            ProcessJSON(json, onFinish);
+        }
     }
 
     void ProcessJSON(JSONObject json, Action onFinish) {

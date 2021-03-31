@@ -8,7 +8,7 @@
 
 		public void Start()
 		{
-			_camera = Camera.main;
+			_camera = Finder.arCamera;
 		}
 
 		void Update()

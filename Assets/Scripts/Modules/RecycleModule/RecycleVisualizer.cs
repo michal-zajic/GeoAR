@@ -11,7 +11,7 @@ public class RecycleVisualizer : ModuleVisualizer
     public override void Enable() {
     }
 
-    public override void Prepare(ModuleDataLoader data, AbstractMap map) {
+    public override void Draw(ModuleDataLoader data, AbstractMap map) {
         throw new System.NotImplementedException();
     }
 

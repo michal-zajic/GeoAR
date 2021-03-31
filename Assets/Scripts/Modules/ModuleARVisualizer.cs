@@ -13,7 +13,7 @@ public class ModuleARVisualizer : ModuleVisualizer
         throw new System.NotImplementedException();
     }
 
-    public override void Prepare(ModuleDataLoader data, AbstractMap map) {
+    public override void Draw(ModuleDataLoader data, AbstractMap map) {
         throw new System.NotImplementedException();
     }    
 }

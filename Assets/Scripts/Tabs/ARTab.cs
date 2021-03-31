@@ -27,6 +27,7 @@ public class ARTab : TabView
 
     bool _firstUpdate = false;
     bool _mapInitialized = false;
+    bool _firstLock = false;
 
     // Start is called before the first frame update
     void Start()
@@ -57,6 +58,10 @@ public class ARTab : TabView
     }
 
     void SetLockModeTo(LockMode mode) {
+        if (!_firstLock && mode == LockMode.locked) {
+            VisualizeData();
+            _firstLock = true;
+        }
         _lockMode = mode;
         _lockButton.gameObject.SetActive(_lockMode == LockMode.locked);
         _unlockButton.gameObject.SetActive(_lockMode == LockMode.unlocked);
