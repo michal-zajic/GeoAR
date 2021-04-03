@@ -1,11 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Mapbox.Unity.Map;
 using Mapbox.Utils;
 using UnityEngine;
 
-public class RecycleVisualizer : ModuleMapVisualizer
+public class PollenVisualizer : ModuleMapVisualizer
 {
     [SerializeField] Transform _featureParent = null;
     [SerializeField] GameObject _mapRecycleObject = null;
@@ -13,6 +12,8 @@ public class RecycleVisualizer : ModuleMapVisualizer
     Vector2d _initialLoc;
 
     AbstractMap _map;
+
+    float initialScale;
 
     public override void Disable() {
         objects.ForEach(obj => {
@@ -26,27 +27,21 @@ public class RecycleVisualizer : ModuleMapVisualizer
         });
     }
 
-    IEnumerator DrawCoroutine(List<Container> containers) {
-        DestroyObjects();
+    IEnumerator DrawCoroutine(List<PollenInfo> pollenInfos) {
         int i = 1;
-        foreach (Container container in containers) {
+        foreach (PollenInfo info in pollenInfos) {
             GameObject obj = Instantiate(_mapRecycleObject);
-            obj.transform.localScale = 0.03f * _map.transform.localScale;
-            obj.transform.position = _map.GeoToWorldPosition(new Vector2d(container.coordinates.y, container.coordinates.x));
+            obj.transform.localScale = new Vector3(10.0f, 10, 10);
+            initialScale = obj.transform.localScale.x;
+            obj.transform.position = _map.GeoToWorldPosition(new Vector2d(info.coordinates.x, info.coordinates.y));
             obj.transform.position += new Vector3(0, (i * 0.001f) + 0.01f, 0);
             obj.transform.SetParent(_featureParent);
-
-            var colors = container.trashTypes.Select(type => {
-                return Container.GetColorFromTrashType(type);
-            }).Distinct().ToList();
-            var accessColor = Container.GetColorFromAccessibility(container.accessibility);
-            obj.GetComponent<PieChart>().Init(colors, accessColor, true);
+            PollenMapObject pollenMO = obj.GetComponent<PollenMapObject>();
+            pollenMO.SetActive(info.grassDanger != PollenInfo.Danger.low, info.treeDanger != PollenInfo.Danger.low, info.weedDanger != PollenInfo.Danger.low);
+                        
             objects.Add(obj);
 
             i++;
-            /*if (i % 40 == 0)
-                yield return null;*/
-
         }
         yield return null;
     }
@@ -58,13 +53,22 @@ public class RecycleVisualizer : ModuleMapVisualizer
             OnMapUpdated();
             _map.OnUpdated += OnMapUpdated;
         }
-        RecycleDataLoader loader = data as RecycleDataLoader;
-        StartCoroutine(DrawCoroutine(loader.containers));
+        PollenDataLoader loader = data as PollenDataLoader;
+        List<PollenInfo> infos = loader.pollenInfos;
+        PollenInfo centerInfo = loader.NearestInfoTo(map.CenterLatitudeLongitude);
+        centerInfo.coordinates = map.CenterLatitudeLongitude;
+        StartCoroutine(DrawCoroutine(loader.pollenInfos));
     }
 
     private void OnMapUpdated() {
         _featureParent.position = _map.GeoToWorldPosition(_initialLoc);
         float scale = _map.transform.localScale.x;
         _featureParent.localScale = new Vector3(scale, scale, scale);
-    }   
+        float size = initialScale / (scale);
+        foreach (Transform child in _featureParent.transform) {
+            child.localScale = new Vector3(size, size, size);
+        }
+    }
+
+
 }

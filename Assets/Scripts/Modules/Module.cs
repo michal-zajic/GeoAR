@@ -6,7 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(ModuleVisualizer), typeof(ModuleDataLoader), typeof(ModuleARVisualizer))]
 public abstract class Module: MonoBehaviour {
     [HideInInspector]
-    public ModuleVisualizer visualizer { get; private set; }
+    public ModuleMapVisualizer mapVisualizer { get; private set; }
     [HideInInspector]
     public ModuleARVisualizer arVisualizer { get; private set; }
     [HideInInspector]
@@ -18,13 +18,14 @@ public abstract class Module: MonoBehaviour {
         }
     }
 
+    public abstract float GetMinZoom();
     public abstract string GetName();
     public abstract string GetDescription();
     public abstract GameObject GetTutorialObject();
     public abstract Sprite GetIcon();
 
     public void Init() {
-        visualizer = GetComponent<ModuleVisualizer>();
+        mapVisualizer = GetComponent<ModuleMapVisualizer>();
         arVisualizer = GetComponent<ModuleARVisualizer>();
         dataLoader = GetComponent<ModuleDataLoader>();
     } 

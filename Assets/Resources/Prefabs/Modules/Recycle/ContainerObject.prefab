@@ -207,6 +207,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   circle: {fileID: 21300000, guid: f04f7faa5cfd8444a9b61e426135725f, type: 3}
+  _background: {fileID: 0}
 --- !u!114 &7421177986076318122
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -231,6 +232,7 @@ GameObject:
   - component: {fileID: 2781681960865210429}
   - component: {fileID: 9098237410170539154}
   - component: {fileID: 5123165507476853438}
+  - component: {fileID: 4258719362163219662}
   m_Layer: 0
   m_Name: Cap_mash_low
   m_TagString: Untagged
@@ -299,6 +301,18 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &4258719362163219662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5404791588528444286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80e57e4b7c355440e9386d1e4e6e36dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8692375911280642073
 GameObject:
   m_ObjectHideFlags: 0
@@ -312,6 +326,7 @@ GameObject:
   - component: {fileID: 4095231310712599702}
   - component: {fileID: 1244391694333211932}
   - component: {fileID: 8232591909149730386}
+  - component: {fileID: 4549636596400899763}
   m_Layer: 0
   m_Name: ContainerObject
   m_TagString: ModuleObject
@@ -410,3 +425,15 @@ MonoBehaviour:
   _objectToHide: {fileID: 729946564791598537}
   _renderer: {fileID: 1244391694333211932}
   _pieChart: {fileID: 2142729023330863049}
+--- !u!114 &4549636596400899763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8692375911280642073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80e57e4b7c355440e9386d1e4e6e36dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

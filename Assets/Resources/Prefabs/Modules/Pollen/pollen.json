@@ -1,0 +1,1 @@
+"{\"message\":\"Success\",\"lat\":\"50.046287583279\",\"lng\":\"14.3324414111689\",\"data\":[{\"Count\":{\"grass_pollen\":1,\"tree_pollen\":357,\"weed_pollen\":2},\"Risk\":{\"grass_pollen\":\"Low\",\"tree_pollen\":\"High\",\"weed_pollen\":\"Low\"},\"updatedAt\":\"2021-04-03T10:32:16.000Z\"}]}"

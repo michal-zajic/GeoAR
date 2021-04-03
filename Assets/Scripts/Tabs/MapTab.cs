@@ -37,6 +37,7 @@ public class MapTab : TabView {
         _locationButton.onClick.AddListener(CenterOnUserLocation);
         _updateButton.onClick.AddListener(() => { Finder.moduleMgr.VisualizeOnMap(_map); });
         SendLocationToState(_map.CenterLatitudeLongitude);
+        UpdateUpdateButton();
     }
 
     protected override void OnTabSelection() {
@@ -63,7 +64,15 @@ public class MapTab : TabView {
     void OnMapUpdated() {
         SendLocationToState(_map.CenterLatitudeLongitude);
 
-        _updateButton.interactable = _map.Zoom > 14;
+        UpdateUpdateButton();        
+    }
+
+    void UpdateUpdateButton() {
+        if (Finder.moduleMgr.activeModule == null) {
+            _updateButton.interactable = true;
+        } else {
+            _updateButton.interactable = _map.Zoom > Finder.moduleMgr.activeModule.GetMinZoom();
+        }
     }
 
     Vector2d ScreenToGeoPoint(Vector2 screenPos) {

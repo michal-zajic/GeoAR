@@ -6,10 +6,12 @@ public class Finder {
     public static ModuleMgr moduleMgr => GetModuleMgr();
     public static UIMgr uiMgr => GetUIMgr();
     public static Camera arCamera => GetARCamera();
+    public static MeshRenderer particleEmitPlane => GetParticlePlane();
 
     static ModuleMgr _moduleMgr = null;
     static UIMgr _uiMgr = null;
     static Camera _arCamera = null;
+    static MeshRenderer _particleEmitPlane = null;
 
     static ModuleMgr GetModuleMgr() {
         if (_moduleMgr == null) {
@@ -30,5 +32,12 @@ public class Finder {
             _arCamera = GameObject.Find("ARCamera").GetComponent<Camera>();
         }
         return _arCamera;
+    }
+
+    static MeshRenderer GetParticlePlane() {
+        if (_particleEmitPlane == null) {
+            _particleEmitPlane = GameObject.Find("ParticleEmitPlane").GetComponent<MeshRenderer>();
+        }
+        return _particleEmitPlane;
     }
 }

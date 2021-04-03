@@ -11,6 +11,7 @@ public class ModuleMgr : MonoBehaviour
     [HideInInspector]
     public List<Module> modules { get; private set; }
 
+    [HideInInspector]
     public Module activeModule = null;
 
     private Vector2d lastCoord;
@@ -43,7 +44,7 @@ public class ModuleMgr : MonoBehaviour
     public void SetActiveModule(string moduleName) {
         if(activeModule != null) {
             activeModule.arVisualizer.Disable();
-            activeModule.visualizer.Disable();
+            activeModule.mapVisualizer.Disable();
         }
 
         if(moduleName == null) {
@@ -73,8 +74,12 @@ public class ModuleMgr : MonoBehaviour
 
     //If coordinates didnt change, just enable the objects, otherwise reload data
     private void EnableVisualizer(bool ar) {
-        ModuleVisualizer vis = ar ? activeModule.arVisualizer : activeModule.visualizer;
-        if(vis.lastCoord.Equals(ar ? lastCoordAR : lastCoord)) {
+        ModuleVisualizer vis;
+        if (ar)
+            vis = activeModule.arVisualizer;
+        else
+            vis = activeModule.mapVisualizer;
+        if (vis.lastCoord.Equals(ar ? lastCoordAR : lastCoord)) {
             vis.Enable();
         } else {
             UpdateAndDrawData(ar);
@@ -86,7 +91,11 @@ public class ModuleMgr : MonoBehaviour
         AbstractMap currentMap = ar ? arMap : map;
         float range = ar ? 580 : 1000;
         if (activeModule != null && currentMap != null) {
-            ModuleVisualizer vis = ar ? activeModule.arVisualizer : activeModule.visualizer;
+            ModuleVisualizer vis;
+            if (ar)
+                vis = activeModule.arVisualizer;
+            else
+                vis = activeModule.mapVisualizer;
             Vector2d center = (ar ? arMap : map).CenterLatitudeLongitude;
             vis.lastCoord = center;
 

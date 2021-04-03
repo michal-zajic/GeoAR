@@ -1,0 +1,133 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &417208809970899721
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7576301951971713591}
+  m_Layer: 0
+  m_Name: FeatureParent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7576301951971713591
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 417208809970899721}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 3868261140464054186}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7214260483686081627
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3868261140464054186}
+  - component: {fileID: 5225009968775851538}
+  - component: {fileID: 1593565890944752681}
+  - component: {fileID: 7471276678919482166}
+  - component: {fileID: 2172805673642496551}
+  m_Layer: 0
+  m_Name: PollenModule
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3868261140464054186
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7214260483686081627}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 7576301951971713591}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5225009968775851538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7214260483686081627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be451946b6ff248829e2cb5178a5693d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lastCoord:
+    x: 0
+    y: 0
+  _pollenARObject: {fileID: 1803654595998670267, guid: 13015b33755714e7ebb4239ad82bc544,
+    type: 3}
+--- !u!114 &1593565890944752681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7214260483686081627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df037ad5f19304d1b8e4cb22f2eee30c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7471276678919482166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7214260483686081627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 996283c461afb4610afc2bd7d03a83c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lastCoord:
+    x: 0
+    y: 0
+  _featureParent: {fileID: 7576301951971713591}
+  _mapRecycleObject: {fileID: 2045487411896748062, guid: 61b7e231650b24d2aab2735fec5e8c1f,
+    type: 3}
+--- !u!114 &2172805673642496551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7214260483686081627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 246cc7476fd514c4f84d180fc25f51b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moduleName: "Pylov\xE1 situace"
+  description: "Informace o v\xFDskytu pyl\u016F v kategori\xEDch. Na map\u011B je
+    v\xFDskyt pyl\u016F v jednotliv\xFDch kategori\xEDch zobrazen piktogramy, v roz\u0161\xED\u0159en\xE9
+    realit\u011B poletuj\xEDc\xEDmi barevn\xFDmi \u010D\xE1sticemi pyl\u016F."
+  icon: {fileID: 21300000, guid: 84210d4e5926f480b8b9dd6d42d5edd6, type: 3}
+  tutorialObject: {fileID: 6830493340451057791, guid: af121745adc6a43909d6e193533acaaf,
+    type: 3}

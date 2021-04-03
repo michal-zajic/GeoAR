@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RecycleModule : Module
+public class PollenModule : Module
 {
     [SerializeField] string moduleName = null;
-    [TextArea(3, 10)][SerializeField] string description = null;
+    [TextArea(3, 10)] [SerializeField] string description = null;
     [SerializeField] Sprite icon = null;
     [SerializeField] GameObject tutorialObject = null;
 
@@ -26,6 +26,6 @@ public class RecycleModule : Module
     }
 
     public override float GetMinZoom() {
-        return 14;
+        return 0;
     }
 }
