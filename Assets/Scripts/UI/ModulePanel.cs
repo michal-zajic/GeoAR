@@ -20,7 +20,7 @@ public class ModulePanel : MonoBehaviour
     void Start()
     {
         _rt = GetComponent<RectTransform>();
-        Finder.moduleMgr.modules.ForEach((module) => {
+        Finder.instance.moduleMgr.modules.ForEach((module) => {
             GameObject obj = Instantiate(_moduleEntryPrefab, _contentRect);
             ModulePanelEntry entry = obj.GetComponent<ModulePanelEntry>();
             entry.Init(module.GetName(), module.GetDescription(), module.GetIcon(), ModuleClicked);            
@@ -32,10 +32,10 @@ public class ModulePanel : MonoBehaviour
         _miniPanelButton.onClick.AddListener(() => {
             Summon();
         });
-        if (Finder.moduleMgr.activeModule == null) {
+        if (Finder.instance.moduleMgr.activeModule == null) {
             _miniPanelModuleImage.sprite = _cancelIcon;
         } else {
-            ModuleClicked(Finder.moduleMgr.activeModule.name);
+            ModuleClicked(Finder.instance.moduleMgr.activeModule.name);
         }
     }
 
@@ -44,12 +44,12 @@ public class ModulePanel : MonoBehaviour
             if (entry.name == name) {
                 if (entry.active) {
                     entry.SetActive(false);
-                    Finder.moduleMgr.SetActiveModule(null);
+                    Finder.instance.moduleMgr.SetActiveModule(null);
                     _miniPanelModuleImage.sprite = _cancelIcon;
                 } else {
                     entry.SetActive(true);
-                    Finder.moduleMgr.SetActiveModule(entry.name);
-                    _miniPanelModuleImage.sprite = Finder.moduleMgr.activeModule.GetIcon();
+                    Finder.instance.moduleMgr.SetActiveModule(entry.name);
+                    _miniPanelModuleImage.sprite = Finder.instance.moduleMgr.activeModule.GetIcon();
                 }
             } else {
                 entry.SetActive(false);                

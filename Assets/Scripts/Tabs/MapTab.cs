@@ -35,7 +35,7 @@ public class MapTab : TabView {
         _map.OnUpdated += OnMapUpdated;
         _marker.gameObject.SetActive(false);
         _locationButton.onClick.AddListener(CenterOnUserLocation);
-        _updateButton.onClick.AddListener(() => { Finder.moduleMgr.VisualizeOnMap(_map); });
+        _updateButton.onClick.AddListener(() => { Finder.instance.moduleMgr.VisualizeOnMap(_map); });
         SendLocationToState(_map.CenterLatitudeLongitude);
         UpdateUpdateButton();
     }
@@ -46,7 +46,7 @@ public class MapTab : TabView {
 
         ImagerySourceType type = (bool)Settings.instance.GetValue(Settings.Setting.useSatellite) ? ImagerySourceType.MapboxSatelliteStreet : ImagerySourceType.MapboxStreets;
         _map.ImageLayer.SetProperties(type, true, false, true);
-        Finder.uiMgr.SetModulePanel(true);
+        Finder.instance.uiMgr.SetModulePanel(true);
     }
 
     void CenterOnUserLocation() {
@@ -68,10 +68,10 @@ public class MapTab : TabView {
     }
 
     void UpdateUpdateButton() {
-        if (Finder.moduleMgr.activeModule == null) {
+        if (Finder.instance.moduleMgr.activeModule == null) {
             _updateButton.interactable = true;
         } else {
-            _updateButton.interactable = _map.Zoom > Finder.moduleMgr.activeModule.GetMinZoom();
+            _updateButton.interactable = _map.Zoom > Finder.instance.moduleMgr.activeModule.GetMinZoom();
         }
     }
 
@@ -119,8 +119,8 @@ public class MapTab : TabView {
             AppState.instance.UpdateMarkerLocation(_markerPosition);
             PerformHapticFeedback();
 
-            if(Finder.moduleMgr.activeModule != null)
-                Finder.moduleMgr.activeModule.dataLoader.GetDataFor(_markerPosition, 200);
+            //if(Finder.instance.moduleMgr.activeModule != null)
+            //    Finder.instance.moduleMgr.activeModule.dataLoader.GetDataFor(_markerPosition, 200);
         }
 
         ResetLongPress();

@@ -46,7 +46,7 @@ public class ARTab : TabView
         _zoomSlider.onValueChanged.AddListener(ZoomChanged);
                 
         SetLockModeTo(LockMode.unlocked);
-        Finder.uiMgr.SetModulePanel(true);
+        Finder.instance.uiMgr.SetModulePanel(true);
 
         _map.OnInitialized += () => {
             _mapInitialized = true;
@@ -70,7 +70,7 @@ public class ARTab : TabView
         _planeVis.TogglePlanes(_lockMode == LockMode.unlocked);
         _placer.LockStateChangeTo(_lockMode);
 
-        Finder.uiMgr.SetModulePanel(_lockMode == LockMode.locked);
+        Finder.instance.uiMgr.SetModulePanel(_lockMode == LockMode.locked);
     }
 
     void ZoomChanged(float zoom) {
@@ -79,7 +79,7 @@ public class ARTab : TabView
     }
 
     void VisualizeData() {
-        Finder.moduleMgr.VisualizeAROnMap(_map);
+        Finder.instance.moduleMgr.VisualizeAROnMap(_map);
     }
 
     void UpdateMapCenter() {
@@ -107,6 +107,6 @@ public class ARTab : TabView
         ImagerySourceType type = (bool)Settings.instance.GetValue(Settings.Setting.useSatellite) ? ImagerySourceType.MapboxSatelliteStreet : ImagerySourceType.MapboxStreets;
         _map.ImageLayer.SetProperties(type, true, false, true);
 
-        Finder.uiMgr.SetModulePanel(_lockMode == LockMode.locked);
+        Finder.instance.uiMgr.SetModulePanel(_lockMode == LockMode.locked);
     }
 }

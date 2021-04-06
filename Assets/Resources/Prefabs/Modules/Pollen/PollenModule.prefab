@@ -124,7 +124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 246cc7476fd514c4f84d180fc25f51b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moduleName: "Pylov\xE1 situace"
+  moduleName: "Pylov\xFD stav"
   description: "Informace o v\xFDskytu pyl\u016F v kategori\xEDch. Na map\u011B je
     v\xFDskyt pyl\u016F v jednotliv\xFDch kategori\xEDch zobrazen piktogramy, v roz\u0161\xED\u0159en\xE9
     realit\u011B poletuj\xEDc\xEDmi barevn\xFDmi \u010D\xE1sticemi pyl\u016F."

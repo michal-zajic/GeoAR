@@ -26,7 +26,7 @@ public class PollenARObject : MonoBehaviour
 
         var shape = ps.shape;
         shape.shapeType = ParticleSystemShapeType.MeshRenderer;
-        shape.meshRenderer = Finder.particleEmitPlane;
+        shape.meshRenderer = Finder.instance.particleEmitPlane;
         shape.meshShapeType = ParticleSystemMeshShapeType.Triangle;
         shape.alignToDirection = true;
         shape.useMeshColors = false;

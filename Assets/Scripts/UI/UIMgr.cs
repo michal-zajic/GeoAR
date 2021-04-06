@@ -10,8 +10,8 @@ public class UIMgr : MonoBehaviour
 
     private void Start() {
         _helpButton.onClick.AddListener(() => {
-            if(Finder.moduleMgr.activeModule != null)
-                Instantiate(Finder.moduleMgr.activeModule.GetTutorialObject(), transform);
+            if(Finder.instance.moduleMgr.activeModule != null)
+                Instantiate(Finder.instance.moduleMgr.activeModule.GetTutorialObject(), transform);
         });
     }        
 

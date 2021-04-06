@@ -3,41 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Finder {
-    public static ModuleMgr moduleMgr => GetModuleMgr();
-    public static UIMgr uiMgr => GetUIMgr();
-    public static Camera arCamera => GetARCamera();
-    public static MeshRenderer particleEmitPlane => GetParticlePlane();
 
-    static ModuleMgr _moduleMgr = null;
-    static UIMgr _uiMgr = null;
-    static Camera _arCamera = null;
-    static MeshRenderer _particleEmitPlane = null;
+    private static Finder _instance = null;
+    private static FinderLink _link = null;
 
-    static ModuleMgr GetModuleMgr() {
-        if (_moduleMgr == null) {
-            _moduleMgr = GameObject.Find("ModuleMgr").GetComponent<ModuleMgr>();
+    public static Finder instance {
+        get {
+            if(_instance == null) {
+                _instance = new Finder();
+                _link = GameObject.Find("FinderLink").GetComponent<FinderLink>();
+            }
+            return _instance;
         }
-        return _moduleMgr;
     }
 
-    static UIMgr GetUIMgr() {
-        if (_uiMgr == null) {
-            _uiMgr = GameObject.Find("UI").GetComponent<UIMgr>();
-        }
-        return _uiMgr;
-    }
-
-    static Camera GetARCamera() {
-        if(_arCamera == null) {
-            _arCamera = GameObject.Find("ARCamera").GetComponent<Camera>();
-        }
-        return _arCamera;
-    }
-
-    static MeshRenderer GetParticlePlane() {
-        if (_particleEmitPlane == null) {
-            _particleEmitPlane = GameObject.Find("ParticleEmitPlane").GetComponent<MeshRenderer>();
-        }
-        return _particleEmitPlane;
-    }
+    public ModuleMgr moduleMgr => _link.moduleMgr;
+    public UIMgr uiMgr => _link.uiMgr;
+    public Camera arCamera => _link.arCamera;
+    public MeshRenderer particleEmitPlane => _link.particleEmitPlane;
 }

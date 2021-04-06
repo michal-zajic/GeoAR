@@ -89,7 +89,6 @@ public class ModuleMgr : MonoBehaviour
     //Refreshes data on new map coordinates
     private void UpdateAndDrawData(bool ar) {
         AbstractMap currentMap = ar ? arMap : map;
-        float range = ar ? 580 : 1000;
         if (activeModule != null && currentMap != null) {
             ModuleVisualizer vis;
             if (ar)
@@ -99,9 +98,10 @@ public class ModuleMgr : MonoBehaviour
             Vector2d center = (ar ? arMap : map).CenterLatitudeLongitude;
             vis.lastCoord = center;
 
-            activeModule.dataLoader.GetDataFor(center, range, () => {                
+            activeModule.dataLoader.Init(currentMap, ar);
+            activeModule.dataLoader.GetData(() => {                
                 vis.Draw(activeModule.dataLoader, currentMap);
-            }, ar);
+            });
         }
     }
 }

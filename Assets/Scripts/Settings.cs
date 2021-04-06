@@ -39,7 +39,7 @@ public sealed class Settings {
                 return new List<string> { "Maximální", "Střední", "Minimální" };
             case Setting.moduleDefault:
                 List<string> list = new List<string> { "Žádný" };
-                Finder.moduleMgr.modules.ForEach(module => {
+                Finder.instance.moduleMgr.modules.ForEach(module => {
                     list.Add(module.name);
                 });
                 return list;

@@ -393,7 +393,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1.11
-  m_Text: "Pylov\xE1 situace"
+  m_Text: "Pylov\xFD stav"
 --- !u!1 &2080508678127362971
 GameObject:
   m_ObjectHideFlags: 0

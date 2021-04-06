@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Mapbox.Unity.Map;
 using Mapbox.Utils;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -38,11 +39,16 @@ public class PollenDataLoader : ModuleDataLoader
 
     private void Start() {
         if (!LoadDataFromDisc()) {
-            GetDataFor(startLocations[0]);
+            location = startLocations[0];
+            GetData();
         }        
     }
 
-    public override void GetDataFor(Vector2d location, float range = 0, Action onFinish = null, bool ar = true) {
+    public override void Init(AbstractMap map, bool ar = false) {
+        base.Init(map, ar);
+    }
+
+    public override void GetData(Action onFinish = null) {
         if (IsLocationNearExisting(location)) {
             if (onFinish != null)
                 onFinish();
@@ -86,9 +92,11 @@ public class PollenDataLoader : ModuleDataLoader
 
             startLocationsCounter++;
             if(startLocationsCounter < startLocations.Count - 1) {
-                GetDataFor(startLocations[startLocationsCounter]);
+                location = startLocations[startLocationsCounter];
+                GetData();
             } else if(startLocationsCounter == startLocations.Count - 1) {
-                GetDataFor(startLocations[startLocationsCounter], 0, SaveDataToDisc);
+                location = startLocations[startLocationsCounter];
+                GetData(SaveDataToDisc);
             }
         }
     }

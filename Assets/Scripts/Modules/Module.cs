@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Mapbox.Utils;
 using UnityEngine;
 
-[RequireComponent(typeof(ModuleVisualizer), typeof(ModuleDataLoader), typeof(ModuleARVisualizer))]
+[RequireComponent(typeof(ModuleMapVisualizer), typeof(ModuleDataLoader), typeof(ModuleARVisualizer))]
 public abstract class Module: MonoBehaviour {
     [HideInInspector]
     public ModuleMapVisualizer mapVisualizer { get; private set; }

@@ -5,6 +5,7 @@ using UnityEngine;
 using System;
 using UnityEngine.Networking;
 using System.Globalization;
+using Mapbox.Unity.Map;
 
 public class RecycleDataLoader : ModuleDataLoader
 {
@@ -13,11 +14,15 @@ public class RecycleDataLoader : ModuleDataLoader
     public List<Container> containers { get; private set; }
     public List<Container> arContainers { get; private set; }
 
-    public override void GetDataFor(Vector2d location, float range = 0, Action onFinish = null, bool ar = true) {
-        StartCoroutine(LoadJSON(location, range, onFinish, ar));
+    public override void GetData(Action onFinish = null) {
+        StartCoroutine(LoadJSON(onFinish));
     }
 
-    IEnumerator LoadJSON(Vector2d location, float range, Action onFinish, bool ar) {
+    public override void Init(AbstractMap map, bool ar = false) {
+        base.Init(map, ar);                
+    }
+
+    IEnumerator LoadJSON(Action onFinish) {
         string locationString = "";
         string rangeString = "";
         if (range > 0) {
@@ -33,7 +38,7 @@ public class RecycleDataLoader : ModuleDataLoader
 
         if (request.isNetworkError || request.isHttpError) {
             Debug.Log(request.error);
-            StartCoroutine(LoadJSON(location, range, onFinish, ar));
+            StartCoroutine(LoadJSON(onFinish));
             yield break;            
         } else {
             string s = request.downloadHandler.text;

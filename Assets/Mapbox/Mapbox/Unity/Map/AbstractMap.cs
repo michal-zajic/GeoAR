@@ -100,7 +100,7 @@ namespace Mapbox.Unity.Map
 					_tileProvider.ExtentChanged += OnMapExtentChanged;
 				}
 			}
-		}
+		}		
 
 		/// <summary>
 		/// The map options.
