@@ -17,6 +17,10 @@ public class UIMgr : MonoBehaviour
 
     public void SetModulePanel(bool active) {
         _modulePanel.SetActive(active);
-        _helpButton.gameObject.SetActive(active);
+        UpdateHelpButton();
+    }
+
+    public void UpdateHelpButton() {
+        _helpButton.gameObject.SetActive(Finder.instance.moduleMgr.activeModule != null && _modulePanel.activeInHierarchy);
     }
 }

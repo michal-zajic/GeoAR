@@ -31,7 +31,7 @@ public class RecycleVisualizer : ModuleMapVisualizer
         int i = 1;
         foreach (Container container in containers) {
             GameObject obj = Instantiate(_mapRecycleObject);
-            obj.transform.localScale = 0.03f * _map.transform.localScale;
+            obj.transform.localScale = 0.03f * _map.transform.localScale.x * _map.transform.parent.localScale;
             obj.transform.position = _map.GeoToWorldPosition(new Vector2d(container.coordinates.y, container.coordinates.x));
             obj.transform.position += new Vector3(0, (i * 0.001f) + 0.01f, 0);
             obj.transform.SetParent(_featureParent);
@@ -64,7 +64,7 @@ public class RecycleVisualizer : ModuleMapVisualizer
 
     private void OnMapUpdated() {
         _featureParent.position = _map.GeoToWorldPosition(_initialLoc);
-        float scale = _map.transform.localScale.x;
+        float scale = _map.transform.localScale.x * _map.transform.parent.localScale.x;
         _featureParent.localScale = new Vector3(scale, scale, scale);
     }   
 }

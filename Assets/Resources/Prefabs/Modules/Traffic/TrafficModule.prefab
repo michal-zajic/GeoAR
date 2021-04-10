@@ -50,8 +50,9 @@ MonoBehaviour:
   lastCoord:
     x: 0
     y: 0
-  _carObject: {fileID: 919132149155446097, guid: 41c6c9e3fbd3b4f39ba7cde432edc05e,
+  _segmentObject: {fileID: 377558889263533049, guid: 08af0be6a196440b0955a57f688313dd,
     type: 3}
+  _carLimit: 120
 --- !u!114 &5791016052654828916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97,7 +98,8 @@ MonoBehaviour:
     \xFAseky. V roz\u0161\xED\u0159en\xE9 realit\u011B je pr\u016Fjezdnost zobrazena
     animac\xED obarven\xFDch vozidel."
   icon: {fileID: 21300000, guid: 81618caa3055f4046adcf7d1f904c223, type: 3}
-  tutorialObject: {fileID: 0}
+  tutorialObject: {fileID: 4851716531698120429, guid: 352ef92afb8b74f9e81f4109380393f8,
+    type: 3}
 --- !u!1 &8320104265320407083
 GameObject:
   m_ObjectHideFlags: 0

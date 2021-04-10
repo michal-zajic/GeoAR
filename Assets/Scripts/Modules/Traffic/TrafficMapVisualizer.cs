@@ -32,6 +32,7 @@ public class TrafficMapVisualizer : ModuleMapVisualizer
             _map.OnUpdated += OnMapUpdated;
         }
         TrafficDataLoader loader = data as TrafficDataLoader;
+        StopAllCoroutines();
         DestroyObjects();
         StartCoroutine(DrawLines(loader.mapSegments));
     }
@@ -42,8 +43,8 @@ public class TrafficMapVisualizer : ModuleMapVisualizer
             GameObject obj = new GameObject("line");
             obj.transform.SetParent(_featureParent);
             LineRenderer renderer = obj.AddComponent<LineRenderer>();
-            renderer.startWidth = 0.008f * _map.transform.localScale.x;
-            renderer.endWidth = 0.008f * _map.transform.localScale.x;
+            renderer.startWidth = 1.000f;// * _map.transform.localScale.x * _map.transform.parent.localScale.x;
+            renderer.endWidth = 1.000f;// * _map.transform.localScale.x * _map.transform.parent.localScale.x;
             renderer.positionCount = segment.coordinateList.Count;
             renderer.useWorldSpace = false;
             Material material = new Material(Shader.Find("Unlit/Color"));
@@ -66,7 +67,7 @@ public class TrafficMapVisualizer : ModuleMapVisualizer
 
     private void OnMapUpdated() {
         _featureParent.position = _map.GeoToWorldPosition(_initialLoc);
-        float scale = _map.transform.localScale.x;
+        float scale = _map.transform.localScale.x * _map.transform.parent.localScale.x;
         _featureParent.localScale = new Vector3(scale, scale, scale);
     }
 

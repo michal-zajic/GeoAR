@@ -38,7 +38,7 @@ public class ModuleMgr : MonoBehaviour
         modules.ForEach(module => {
             if (module.name == defaultModule)
                 SetActiveModule(defaultModule);
-        });
+        });        
     }
 
     public void SetActiveModule(string moduleName) {
@@ -48,7 +48,7 @@ public class ModuleMgr : MonoBehaviour
         }
 
         if(moduleName == null) {
-            activeModule = null;
+            activeModule = null;            
         }
         modules.ForEach((module) => {
             if(module.name == moduleName) {
@@ -58,6 +58,7 @@ public class ModuleMgr : MonoBehaviour
                 EnableVisualizer(false);
             }
         });
+        Finder.instance.uiMgr.UpdateHelpButton();
     }
 
     public void VisualizeOnMap(AbstractMap map) {

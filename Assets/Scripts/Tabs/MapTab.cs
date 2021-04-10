@@ -38,6 +38,8 @@ public class MapTab : TabView {
         _updateButton.onClick.AddListener(() => { Finder.instance.moduleMgr.VisualizeOnMap(_map); });
         SendLocationToState(_map.CenterLatitudeLongitude);
         UpdateUpdateButton();
+
+        CreateTutorialPopup(Settings.Setting.showMapTutorial);
     }
 
     protected override void OnTabSelection() {

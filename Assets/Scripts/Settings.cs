@@ -9,7 +9,10 @@ public sealed class Settings {
         gpsDefault,
         moduleDefault,
         zoomDefault,
-        useSatellite
+        useSatellite,
+        showPlacementHint,
+        showMapTutorial,
+        showARTutorial
     }
 
     public static Settings instance {
@@ -113,6 +116,12 @@ public sealed class Settings {
                 return 3;
             case Setting.useSatellite:
                 return 0;
+            case Setting.showPlacementHint:
+                return 0;
+            case Setting.showARTutorial:
+                return 0;
+            case Setting.showMapTutorial:
+                return 0;
             default:
                 return -1;
         }
@@ -127,6 +136,12 @@ public sealed class Settings {
             case Setting.moduleDefault:
                 return "Žádný";
             case Setting.useSatellite:
+                return true;
+            case Setting.showPlacementHint:
+                return true;
+            case Setting.showMapTutorial:
+                return true;
+            case Setting.showARTutorial:
                 return true;
             default:
                 return null;

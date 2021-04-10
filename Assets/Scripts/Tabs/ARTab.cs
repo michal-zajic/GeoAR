@@ -17,6 +17,8 @@ public class ARTab : TabView
     [SerializeField] Button _unlockButton = null;
     [SerializeField] Button _updateButton = null;
     [SerializeField] Slider _zoomSlider = null;
+    [SerializeField] GameObject _placementHintPanel = null;
+    [SerializeField] GameObject _alertPopup = null;
 
     [SerializeField] PlaceMapOnARPlane _placer = null;
     [SerializeField] DeviceLocationProvider _locationProvider = null;
@@ -60,6 +62,7 @@ public class ARTab : TabView
     void SetLockModeTo(LockMode mode) {
         if (!_firstLock && mode == LockMode.locked) {
             VisualizeData();
+            CreateTutorialPopup(Settings.Setting.showARTutorial);
             _firstLock = true;
         }
         _lockMode = mode;
@@ -68,6 +71,7 @@ public class ARTab : TabView
         _updateButton.gameObject.SetActive(_lockMode == LockMode.locked);
         _zoomSlider.gameObject.SetActive(_lockMode == LockMode.locked);
         _planeVis.TogglePlanes(_lockMode == LockMode.unlocked);
+        _placementHintPanel.SetActive(_lockMode == LockMode.unlocked);
         _placer.LockStateChangeTo(_lockMode);
 
         Finder.instance.uiMgr.SetModulePanel(_lockMode == LockMode.locked);
@@ -93,13 +97,27 @@ public class ARTab : TabView
             location = AppState.instance.currentMapCenter;
         }
 
+        CreateAlertPopup();
+
         _map.SetCenterLatitudeLongitude(location);
         _map.UpdateMap();
     }
 
+    void CreateAlertPopup() {
+        var showPlacement = Settings.instance.GetValue(Settings.Setting.showPlacementHint);
+        if ((showPlacement != null && (bool)showPlacement == false) || AppState.instance.markerPlaced)
+            return;
+        GameObject obj = Instantiate(_alertPopup, Finder.instance.uiMgr.transform);
+        AlertPanel popup = obj.GetComponent<AlertPanel>();
+        bool satelliteDefault = Settings.instance.IsGPSDefault();
+        popup.Init(satelliteDefault, null, () => {
+            Settings.instance.Set(Settings.Setting.showPlacementHint, false);
+        });
+    }
+
     protected override void OnTabSelection() {
         base.OnTabSelection();
-        if(!_firstUpdate) {
+        if(!_firstUpdate) {            
             if(_mapInitialized)
                 UpdateMapCenter();
             _firstUpdate = true;

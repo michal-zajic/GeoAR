@@ -26,7 +26,7 @@ public class RecycleARVisualizer : ModuleARVisualizer
         RecycleDataLoader loader = data as RecycleDataLoader;
         foreach(Container container in loader.arContainers) {
             GameObject obj = Instantiate(_containerObject);
-            obj.transform.localScale = 0.03f * map.transform.localScale;
+            obj.transform.localScale = 0.03f * map.transform.localScale.x * map.transform.parent.localScale;
             obj.transform.position = map.GeoToWorldPosition(new Vector2d(container.coordinates.y, container.coordinates.x));
             Vector3 pos = obj.transform.position;
             obj.transform.position = new Vector3(pos.x, pos.y + obj.transform.localScale.y / 2, pos.z);
