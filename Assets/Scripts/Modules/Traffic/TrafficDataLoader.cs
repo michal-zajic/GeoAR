@@ -48,7 +48,7 @@ public class TrafficDataLoader : ModuleDataLoader {
 
         if (request.isNetworkError || request.isHttpError) {
             Debug.Log(request.error);
-            StartCoroutine(LoadJSON(onFinish));
+            Finder.instance.uiMgr.ShowNoConnectionAlert(ar);
             yield break;
         } else {
             string s = request.downloadHandler.text;

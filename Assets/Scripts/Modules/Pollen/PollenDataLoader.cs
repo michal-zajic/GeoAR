@@ -82,7 +82,7 @@ public class PollenDataLoader : ModuleDataLoader
 
         if (request.isNetworkError || request.isHttpError) {
             Debug.Log(request.error);
-            StartCoroutine(LoadJSON(location, onFinish, ar));
+            Finder.instance.uiMgr.ShowNoConnectionAlert(ar);
             yield break;
         } else {
             string s = request.downloadHandler.text;

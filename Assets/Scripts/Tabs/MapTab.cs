@@ -39,7 +39,9 @@ public class MapTab : TabView {
         SendLocationToState(_map.CenterLatitudeLongitude);
         UpdateUpdateButton();
 
-        CreateTutorialPopup(Settings.Setting.showMapTutorial);
+        CreateTutorialPopup(Settings.Setting.showMapTutorial, () => {
+            AppState.instance.allowMapConnectionAlert = true;
+        });
     }
 
     protected override void OnTabSelection() {

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,16 +22,19 @@ public class TabView : MonoBehaviour
             OnTabSelection();
     }
 
-    protected void CreateTutorialPopup(Settings.Setting setting) {
-        if (_tutorialObject == null)
-            return;
+    protected void CreateTutorialPopup(Settings.Setting setting, Action onPopupCloseAction) {        
         var showTutorial = Settings.instance.GetValue(setting);
-        if (showTutorial != null && (bool)showTutorial == false)
+        if (_tutorialObject == null || (showTutorial != null && (bool)showTutorial == false)) {
+            onPopupCloseAction();
             return;
+        }
         GameObject obj = Instantiate(_tutorialObject, Finder.instance.uiMgr.transform);
         TutorialPanel tutorial = obj.GetComponent<TutorialPanel>();
-        tutorial.Init(okAction: null, notAgainAction: () => {
+        tutorial.Init(okAction: () => {
+            onPopupCloseAction();
+        }, notAgainAction: () => {
             Settings.instance.Set(setting, false);
+            onPopupCloseAction();
         });
     }
 

@@ -19,6 +19,9 @@ public class AppState
     public Vector2d markerLocation;
     public bool markerPlaced;
 
+    public bool allowMapConnectionAlert = false;
+    public bool allowARConnectionAlert = false;
+
     public void UpdateMarkerLocation(Vector2d location) {
         markerLocation = location;
     }

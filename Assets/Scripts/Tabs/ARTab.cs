@@ -62,7 +62,9 @@ public class ARTab : TabView
     void SetLockModeTo(LockMode mode) {
         if (!_firstLock && mode == LockMode.locked) {
             VisualizeData();
-            CreateTutorialPopup(Settings.Setting.showARTutorial);
+            CreateTutorialPopup(Settings.Setting.showARTutorial, () => {
+                AppState.instance.allowARConnectionAlert = true;
+            });
             _firstLock = true;
         }
         _lockMode = mode;
