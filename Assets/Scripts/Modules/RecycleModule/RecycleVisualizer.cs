@@ -33,6 +33,7 @@ public class RecycleVisualizer : ModuleMapVisualizer
             GameObject obj = Instantiate(_mapRecycleObject);
             obj.transform.localScale = 0.03f * _map.transform.localScale.x * _map.transform.parent.localScale;
             obj.transform.position = _map.GeoToWorldPosition(new Vector2d(container.coordinates.y, container.coordinates.x));
+            //z(y)-fighting prevention
             obj.transform.position += new Vector3(0, (i * 0.001f) + 0.01f, 0);
             obj.transform.SetParent(_featureParent);
 
@@ -44,9 +45,6 @@ public class RecycleVisualizer : ModuleMapVisualizer
             objects.Add(obj);
 
             i++;
-            /*if (i % 40 == 0)
-                yield return null;*/
-
         }
         yield return null;
     }

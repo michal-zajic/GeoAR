@@ -49,7 +49,8 @@ public class SegmentObject : MonoBehaviour
                 car.onDestroy += () => { _cars.Remove(car); };
                 _cars.Add(car);
             }
-            yield return new WaitForSeconds(Random.Range(3, 8) + _jamFactor / 2 );
+            //the slower the cars go, the slower the spawner should spawn, so the cars arent overlapping too much
+            yield return new WaitForSeconds(Random.Range(3, 8) + _jamFactor / 2 );  
         }
     }
 }

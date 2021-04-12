@@ -13,6 +13,13 @@ public class PollenDataLoader : ModuleDataLoader
     string baseAddress = "https://api.ambeedata.com/latest/pollen/by-lat-lng?";
     string fileName = "pollenInfo.json";
 
+    const string grassJSONKey = "grass_pollen";
+    const string treeJSONKey = "tree_pollen";
+    const string weedJSONKey = "weed_pollen";
+    const string grassDangerJSONKey = "grass_danger";
+    const string treeDangerJSONKey = "tree_danger";
+    const string weedDangerJSONKey = "weed_danger";
+
     string filePath {
         get {
             return Application.persistentDataPath + "/" + fileName;
@@ -111,12 +118,12 @@ public class PollenDataLoader : ModuleDataLoader
 
         PollenInfo pollenInfo = new PollenInfo();
         pollenInfo.coordinates = coordinates;
-        pollenInfo.grassCount = (int)count["grass_pollen"].i;
-        pollenInfo.treeCount = (int)count["tree_pollen"].i;
-        pollenInfo.weedCount = (int)count["weed_pollen"].i;
-        pollenInfo.grassDanger = PollenInfo.DangerFromString(danger["grass_pollen"].str);
-        pollenInfo.treeDanger = PollenInfo.DangerFromString(danger["tree_pollen"].str);
-        pollenInfo.weedDanger = PollenInfo.DangerFromString(danger["weed_pollen"].str);
+        pollenInfo.grassCount = (int)count[grassJSONKey].i;
+        pollenInfo.treeCount = (int)count[treeJSONKey].i;
+        pollenInfo.weedCount = (int)count[weedJSONKey].i;
+        pollenInfo.grassDanger = PollenInfo.DangerFromString(danger[grassJSONKey].str);
+        pollenInfo.treeDanger = PollenInfo.DangerFromString(danger[treeJSONKey].str);
+        pollenInfo.weedDanger = PollenInfo.DangerFromString(danger[weedJSONKey].str);
 
         pollenInfos.Add(pollenInfo);
         if(onFinish != null)
@@ -152,12 +159,12 @@ public class PollenDataLoader : ModuleDataLoader
             Vector2d coordinates = new Vector2d(infoJSON["latitude"].f, infoJSON["longitude"].f);
             JSONObject pollenJSON = infoJSON["pollen"];
             info.coordinates = coordinates;
-            info.grassCount = (int)pollenJSON["grass_pollen"].i;
-            info.treeCount = (int)pollenJSON["tree_pollen"].i;
-            info.weedCount = (int)pollenJSON["weed_pollen"].i;
-            info.grassDanger = PollenInfo.DangerFromString(pollenJSON["grass_danger"].str);
-            info.treeDanger = PollenInfo.DangerFromString(pollenJSON["tree_danger"].str);
-            info.weedDanger = PollenInfo.DangerFromString(pollenJSON["weed_danger"].str);
+            info.grassCount = (int)pollenJSON[grassJSONKey].i;
+            info.treeCount = (int)pollenJSON[treeJSONKey].i;
+            info.weedCount = (int)pollenJSON[weedJSONKey].i;
+            info.grassDanger = PollenInfo.DangerFromString(pollenJSON[grassDangerJSONKey].str);
+            info.treeDanger = PollenInfo.DangerFromString(pollenJSON[treeDangerJSONKey].str);
+            info.weedDanger = PollenInfo.DangerFromString(pollenJSON[weedDangerJSONKey].str);
 
             pollenInfos.Add(info);
         });
@@ -181,12 +188,12 @@ public class PollenDataLoader : ModuleDataLoader
                 JSONObject infoJSON = new JSONObject();
                 infoJSON.AddField("day", DateTime.Now.DayOfYear);
                 JSONObject pollen = new JSONObject();
-                pollen.AddField("grass_pollen", info.grassCount);
-                pollen.AddField("tree_pollen", info.treeCount);
-                pollen.AddField("weed_pollen", info.weedCount);
-                pollen.AddField("grass_danger", info.grassDanger.ToString());
-                pollen.AddField("tree_danger", info.treeDanger.ToString());
-                pollen.AddField("weed_danger", info.weedDanger.ToString());
+                pollen.AddField(grassJSONKey, info.grassCount);
+                pollen.AddField(treeJSONKey, info.treeCount);
+                pollen.AddField(weedJSONKey, info.weedCount);
+                pollen.AddField(grassDangerJSONKey, info.grassDanger.ToString());
+                pollen.AddField(treeDangerJSONKey, info.treeDanger.ToString());
+                pollen.AddField(weedDangerJSONKey, info.weedDanger.ToString());
                 infoJSON.AddField("pollen", pollen);
                 infoJSON.AddField("latitude", (float)info.coordinates.x);
                 infoJSON.AddField("longitude", (float)info.coordinates.y);

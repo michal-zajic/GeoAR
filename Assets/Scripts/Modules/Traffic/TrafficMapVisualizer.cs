@@ -43,8 +43,8 @@ public class TrafficMapVisualizer : ModuleMapVisualizer
             GameObject obj = new GameObject("line");
             obj.transform.SetParent(_featureParent);
             LineRenderer renderer = obj.AddComponent<LineRenderer>();
-            renderer.startWidth = 1.000f;// * _map.transform.localScale.x * _map.transform.parent.localScale.x;
-            renderer.endWidth = 1.000f;// * _map.transform.localScale.x * _map.transform.parent.localScale.x;
+            renderer.startWidth = 1.000f;
+            renderer.endWidth = 1.000f;
             renderer.positionCount = segment.coordinateList.Count;
             renderer.useWorldSpace = false;
             Material material = new Material(Shader.Find("Unlit/Color"));
@@ -58,7 +58,7 @@ public class TrafficMapVisualizer : ModuleMapVisualizer
             renderer.SetPositions(positions);
             objects.Add(obj);
             i++;
-            if(i%10 == 0)
+            if(i%10 == 0) //freeze prevention
                 yield return null;
         }
 

@@ -28,8 +28,6 @@ public class MapTab : TabView {
     Vector2d _corner2 = new Vector2d(51.2190594, 19.0396636);
     Vector2d _markerPosition;
 
-    
-    // Start is called before the first frame update
     void Start()
     {
         _map.OnUpdated += OnMapUpdated;

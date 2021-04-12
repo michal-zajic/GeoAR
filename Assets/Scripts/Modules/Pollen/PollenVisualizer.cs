@@ -69,6 +69,4 @@ public class PollenVisualizer : ModuleMapVisualizer
             child.localScale = new Vector3(size, size, size);
         }
     }
-
-
 }

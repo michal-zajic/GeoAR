@@ -41,7 +41,6 @@ public class Car : HideableObject
         float unitySpeed = _speed * _map.transform.localScale.x * _map.transform.parent.localScale.x / 996 /*real to unity world speed conversion constant*/;
         transform.position += direction * unitySpeed * Time.deltaTime;
 
-
         if(Vector3.Distance(targetPos, transform.position) < 0.05f) {
             _nextPoint++;
         }
