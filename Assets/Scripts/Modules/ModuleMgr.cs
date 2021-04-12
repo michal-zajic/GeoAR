@@ -90,7 +90,7 @@ public class ModuleMgr : MonoBehaviour
     //Refreshes data on new map coordinates
     private void UpdateAndDrawData(bool ar) {
         AbstractMap currentMap = ar ? arMap : map;
-        if (activeModule != null && currentMap != null) {
+        if (activeModule != null && currentMap != null && currentMap.Zoom >= activeModule.GetMinZoom()) {
             ModuleVisualizer vis;
             if (ar)
                 vis = activeModule.arVisualizer;

@@ -66,14 +66,12 @@ public class MapTab : TabView {
     }
 
     void OnMapUpdated() {
-        SendLocationToState(_map.CenterLatitudeLongitude);
-
-        UpdateUpdateButton();        
+        SendLocationToState(_map.CenterLatitudeLongitude);       
     }
 
     void UpdateUpdateButton() {
         if (Finder.instance.moduleMgr.activeModule == null) {
-            _updateButton.interactable = true;
+            _updateButton.interactable = false;
         } else {
             _updateButton.interactable = _map.Zoom > Finder.instance.moduleMgr.activeModule.GetMinZoom();
         }
@@ -146,6 +144,7 @@ public class MapTab : TabView {
     {
         UpdateUserLocationIcon(_locationProvider.CurrentLocation);
         UpdateMarkerLocationIcon();
+        UpdateUpdateButton();
 
         InputCheck();
 

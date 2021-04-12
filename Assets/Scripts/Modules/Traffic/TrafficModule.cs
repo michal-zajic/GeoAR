@@ -25,6 +25,6 @@ public class TrafficModule : Module {
     }
 
     public override float GetMinZoom() {
-        return 0;
+        return 13;
     }
 }

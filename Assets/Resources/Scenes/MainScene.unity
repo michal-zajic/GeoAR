@@ -2143,7 +2143,8 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: "Pohybujte telefonem, dokud nebudete spokojeni s um\xEDst\u011Bn\xEDm mapy.
     Pot\xE9 pozici mapy uzamkn\u011Bte tla\u010D\xEDtkem z\xE1mku. Mapu lze pot\xE9
-    kdykoliv p\u0159em\xEDstit op\u011Btovn\xFDm stisknut\xEDm tla\u010D\xEDtka."
+    kdykoliv p\u0159em\xEDstit op\u011Btovn\xFDm stisknut\xEDm tla\u010D\xEDtka.
+    Gesty m\u016F\u017Eete ot\xE1\u010Det a m\u011Bnit velikost mapy."
 --- !u!222 &404296083
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2187,7 +2188,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 103.796875, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &463028294
@@ -6076,7 +6077,7 @@ RectTransform:
   m_Father: {fileID: 1495152621}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.1, y: 0.78}
+  m_AnchorMin: {x: 0.1, y: 0.75}
   m_AnchorMax: {x: 0.9, y: 0.95}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
