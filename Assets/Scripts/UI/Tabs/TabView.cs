@@ -9,7 +9,7 @@ public class TabView : MonoBehaviour
     [SerializeField] GameObject _objectToHide = null;
     [SerializeField] GameObject _tutorialObject = null;
 
-    protected new Camera camera => _camera;    
+    protected Camera camera => _camera;    
 
     public void SetActive(bool active) {
         if (active)

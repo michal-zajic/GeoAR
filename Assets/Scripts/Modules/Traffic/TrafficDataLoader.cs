@@ -18,33 +18,16 @@ public class TrafficDataLoader : ModuleDataLoader {
     string finalAddress => baseAddress + apiKey + locationAddress;
 
     public override void GetData(Action onFinish = null) {
-        string s = finalAddress;
-        Stop();
-        Finder.instance.uiMgr.AddLoader(this);
-        StartCoroutine(LoadJSON(onFinish));
+        LoadJSON((json)=> { ProcessJSON(json, onFinish); });
     }
 
     public override void Init(AbstractMap map, bool ar = false) {
         base.Init(map, ar);
     }
 
-    IEnumerator LoadJSON(Action onFinish = null) {
-        Uri address = new Uri(finalAddress);
-
-        UnityWebRequest request = UnityWebRequest.Get(address);
-        yield return request.SendWebRequest();
-
-        if (request.isNetworkError || request.isHttpError) {
-            Debug.Log(request.error);
-            Finder.instance.uiMgr.ShowNoConnectionAlert(ar);
-            Stop();
-            yield break;
-        } else {
-            string s = request.downloadHandler.text;
-            JSONObject json = new JSONObject(s);
-
-            ProcessJSON(json, onFinish);
-        }
+    protected override UnityWebRequest GetRequest() {
+        Uri url = new Uri(finalAddress);
+        return new UnityWebRequest(url);        
     }
 
     void ProcessJSON(JSONObject json, Action onFinish = null) {

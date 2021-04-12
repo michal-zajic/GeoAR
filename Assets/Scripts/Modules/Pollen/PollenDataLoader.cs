@@ -43,26 +43,25 @@ public class PollenDataLoader : ModuleDataLoader
     };
 
     int startLocationsCounter = 0;
-
-    private void Start() {
-        if (!LoadDataFromDisc()) {
-            location = startLocations[0];
-            GetData();
-        }        
-    }
+    bool initialized = false;
 
     public override void Init(AbstractMap map, bool ar = false) {
         base.Init(map, ar);
+        initialized = LoadDataFromDisc();       
     }
 
     public override void GetData(Action onFinish = null) {
+        if (!initialized) {
+            startLocations.Add(location);
+            location = startLocations[0];
+            LoadJSON((json) => { RequestComplete(json, onFinish); });
+            return;
+        }
         if (IsLocationNearExisting(location)) {
             if (onFinish != null)
                 onFinish();
         } else {
-            StopAllCoroutines();
-            Finder.instance.uiMgr.AddLoader(this);
-            StartCoroutine(LoadJSON(location, onFinish, ar));
+            LoadJSON((json) => { RequestComplete(json, onFinish); });
         }        
     }
 
@@ -79,39 +78,37 @@ public class PollenDataLoader : ModuleDataLoader
         return nearestInfo;
     }
 
-    IEnumerator LoadJSON(Vector2d location, Action onFinish, bool ar) {        
+    protected override UnityWebRequest GetRequest() {
         string locationString = "lat=" + location.x + "&lng=" + location.y;
-        
+
         Uri address = new Uri(baseAddress + locationString);
 
         UnityWebRequest request = UnityWebRequest.Get(address);
         request.SetRequestHeader("x-api-key", "M9rf3WXvhx2PlxGAIDKgyv1N5KQnGev8ZtR2AzHj");
-
-        yield return request.SendWebRequest();
-
-        if (request.isNetworkError || request.isHttpError) {
-            Debug.Log(request.error);
-            Finder.instance.uiMgr.ShowNoConnectionAlert(ar);
-            Stop();
-            yield break;
-        } else {
-            string s = request.downloadHandler.text;
-            JSONObject json = new JSONObject(s);
-
-            ProcessJSON(json, location, onFinish);
-
-            startLocationsCounter++;
-            if(startLocationsCounter < startLocations.Count - 1) {
-                location = startLocations[startLocationsCounter];
-                GetData();
-            } else if(startLocationsCounter == startLocations.Count - 1) {
-                location = startLocations[startLocationsCounter];
-                GetData(SaveDataToDisc);
-            }
-        }
+        return request;
     }
 
-    void ProcessJSON(JSONObject json, Vector2d coordinates, Action onFinish) {
+    void RequestComplete(JSONObject json, Action onFinish) {             
+        ProcessJSON(json, location);
+
+        startLocationsCounter++;
+        if(startLocationsCounter < startLocations.Count - 1) {
+            location = startLocations[startLocationsCounter];
+            GetData();
+            return;
+        } else if(startLocationsCounter == startLocations.Count - 1) {
+            location = startLocations[startLocationsCounter];
+            GetData(SaveDataToDisc);
+            initialized = true;
+            return;
+        }
+
+        if (onFinish != null)
+            onFinish();
+        Stop();
+    }
+
+    void ProcessJSON(JSONObject json, Vector2d coordinates) {
         if(json.GetField("message").str != "Success")
             return;
 
@@ -128,10 +125,7 @@ public class PollenDataLoader : ModuleDataLoader
         pollenInfo.treeDanger = PollenInfo.DangerFromString(danger[treeJSONKey].str);
         pollenInfo.weedDanger = PollenInfo.DangerFromString(danger[weedJSONKey].str);
 
-        pollenInfos.Add(pollenInfo);
-        if(onFinish != null)
-            onFinish();
-        Stop();
+        pollenInfos.Add(pollenInfo);        
     }
 
     bool IsLocationNearExisting(Vector2d location) {
