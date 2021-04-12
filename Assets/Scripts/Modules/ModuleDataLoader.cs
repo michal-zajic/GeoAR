@@ -16,5 +16,10 @@ public abstract class ModuleDataLoader : MonoBehaviour {
         location = map.CenterLatitudeLongitude;
     }
 
+    public void Stop() {
+        StopAllCoroutines();
+        Finder.instance.uiMgr.RemoveLoader(this);
+    }
+
     public abstract void GetData(Action onFinish = null);
 }

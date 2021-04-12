@@ -45,6 +45,7 @@ public class ModuleMgr : MonoBehaviour
         if(activeModule != null) {
             activeModule.arVisualizer.Disable();
             activeModule.mapVisualizer.Disable();
+            activeModule.dataLoader.Stop();
         }
 
         if(moduleName == null) {

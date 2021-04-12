@@ -49,6 +49,7 @@ public class MapTab : TabView {
         ImagerySourceType type = (bool)Settings.instance.GetValue(Settings.Setting.useSatellite) ? ImagerySourceType.MapboxSatelliteStreet : ImagerySourceType.MapboxStreets;
         _map.ImageLayer.SetProperties(type, true, false, true);
         Finder.instance.uiMgr.SetModulePanel(true);
+        Finder.instance.uiMgr.SetLoadingImage(true);
     }
 
     void CenterOnUserLocation() {

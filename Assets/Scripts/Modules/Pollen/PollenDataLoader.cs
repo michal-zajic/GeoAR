@@ -60,6 +60,8 @@ public class PollenDataLoader : ModuleDataLoader
             if (onFinish != null)
                 onFinish();
         } else {
+            StopAllCoroutines();
+            Finder.instance.uiMgr.AddLoader(this);
             StartCoroutine(LoadJSON(location, onFinish, ar));
         }        
     }
@@ -90,6 +92,7 @@ public class PollenDataLoader : ModuleDataLoader
         if (request.isNetworkError || request.isHttpError) {
             Debug.Log(request.error);
             Finder.instance.uiMgr.ShowNoConnectionAlert(ar);
+            Stop();
             yield break;
         } else {
             string s = request.downloadHandler.text;
@@ -128,6 +131,7 @@ public class PollenDataLoader : ModuleDataLoader
         pollenInfos.Add(pollenInfo);
         if(onFinish != null)
             onFinish();
+        Stop();
     }
 
     bool IsLocationNearExisting(Vector2d location) {

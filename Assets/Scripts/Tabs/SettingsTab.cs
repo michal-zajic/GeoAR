@@ -18,5 +18,6 @@ public class SettingsTab : TabView
     protected override void OnTabSelection() {
         base.OnTabSelection();
         Finder.instance.uiMgr.SetModulePanel(false);
+        Finder.instance.uiMgr.SetLoadingImage(false);
     }
 }

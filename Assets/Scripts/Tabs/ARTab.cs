@@ -48,7 +48,7 @@ public class ARTab : TabView
         _zoomSlider.onValueChanged.AddListener(ZoomChanged);
                 
         SetLockModeTo(LockMode.unlocked);
-        Finder.instance.uiMgr.SetModulePanel(true);
+        Finder.instance.uiMgr.SetModulePanel(true);        
 
         _map.OnInitialized += () => {
             _mapInitialized = true;
@@ -128,5 +128,6 @@ public class ARTab : TabView
         _map.ImageLayer.SetProperties(type, true, false, true);
 
         Finder.instance.uiMgr.SetModulePanel(_lockMode == LockMode.locked);
+        Finder.instance.uiMgr.SetLoadingImage(true);
     }
 }

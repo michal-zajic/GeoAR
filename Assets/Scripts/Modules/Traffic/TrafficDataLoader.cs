@@ -19,6 +19,8 @@ public class TrafficDataLoader : ModuleDataLoader {
 
     public override void GetData(Action onFinish = null) {
         string s = finalAddress;
+        Stop();
+        Finder.instance.uiMgr.AddLoader(this);
         StartCoroutine(LoadJSON(onFinish));
     }
 
@@ -35,6 +37,7 @@ public class TrafficDataLoader : ModuleDataLoader {
         if (request.isNetworkError || request.isHttpError) {
             Debug.Log(request.error);
             Finder.instance.uiMgr.ShowNoConnectionAlert(ar);
+            Stop();
             yield break;
         } else {
             string s = request.downloadHandler.text;
@@ -93,6 +96,7 @@ public class TrafficDataLoader : ModuleDataLoader {
         }
         if (onFinish != null)
             onFinish();
+        Stop();
     }
 
     //the map is bigger than what user sees, so if some segment doesn't cross the visible part, remove it

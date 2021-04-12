@@ -15,6 +15,8 @@ public class RecycleDataLoader : ModuleDataLoader
     public List<Container> arContainers { get; private set; }
 
     public override void GetData(Action onFinish = null) {
+        Stop();
+        Finder.instance.uiMgr.AddLoader(this);
         StartCoroutine(LoadJSON(onFinish));
     }
 
@@ -39,6 +41,7 @@ public class RecycleDataLoader : ModuleDataLoader
         if (request.isNetworkError || request.isHttpError) {
             Debug.Log(request.error);
             Finder.instance.uiMgr.ShowNoConnectionAlert(ar);
+            Stop();
             yield break;            
         } else {
             string s = request.downloadHandler.text;
@@ -77,12 +80,13 @@ public class RecycleDataLoader : ModuleDataLoader
                 (ar ? arContainers : containers).Add(container);
 
                 i++;
-                if (i % 10 == 0)
+                if (i % 40 == 0)
                     yield return null;
             }
         }
         if(onFinish != null)
             onFinish();
+        Stop();
     }
     
 }
