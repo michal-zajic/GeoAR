@@ -6,18 +6,10 @@ using UnityEngine.UI;
 
 public class TutorialPanel : MonoBehaviour
 {
-    [SerializeField] Button _notAgainButton = null;
     [SerializeField] Button _okButton = null;
 
-    public void Init(Action notAgainAction = null, Action okAction = null) {
-        StartCoroutine(FlashButton());
-        _notAgainButton.onClick.AddListener(() => {
-            if (notAgainAction != null) {
-                notAgainAction();
-            }
-            StopAllCoroutines();
-            Destroy(gameObject);
-        });
+    public void Init(Action okAction = null) {
+        //StartCoroutine(FlashButton());        
         _okButton.onClick.AddListener(() => {
             if (okAction != null) {
                 okAction();

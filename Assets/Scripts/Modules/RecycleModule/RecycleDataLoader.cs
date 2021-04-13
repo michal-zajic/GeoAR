@@ -64,9 +64,9 @@ public class RecycleDataLoader : ModuleDataLoader
                 (ar ? arContainers : containers).Add(container);
             }
         }
+        Stop();
         if(onFinish != null)
             onFinish();
-        Stop();
     }
     
 }

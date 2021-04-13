@@ -77,9 +77,9 @@ public class TrafficDataLoader : ModuleDataLoader {
 
             }
         }
+        Stop();
         if (onFinish != null)
             onFinish();
-        Stop();
     }
 
     //the map is bigger than what user sees, so if some segment doesn't cross the visible part, remove it

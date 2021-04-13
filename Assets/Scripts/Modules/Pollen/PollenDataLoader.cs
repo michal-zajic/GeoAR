@@ -44,6 +44,8 @@ public class PollenDataLoader : ModuleDataLoader
 
     int startLocationsCounter = 0;
     bool initialized = false;
+    bool firstTime = true;
+    Vector2d tmpLocation = Vector2d.zero;
 
     public override void Init(AbstractMap map, bool ar = false) {
         base.Init(map, ar);
@@ -51,8 +53,11 @@ public class PollenDataLoader : ModuleDataLoader
     }
 
     public override void GetData(Action onFinish = null) {
-        if (!initialized) {
-            startLocations.Add(location);
+        if (firstTime) {
+            tmpLocation = location;
+            firstTime = false;
+        }
+        if (!initialized) {            
             location = startLocations[0];
             LoadJSON((json) => { RequestComplete(json, onFinish); });
             return;
@@ -100,12 +105,17 @@ public class PollenDataLoader : ModuleDataLoader
             location = startLocations[startLocationsCounter];
             GetData(SaveDataToDisc);
             initialized = true;
+            if (tmpLocation != Vector2d.zero) {
+                location = tmpLocation;
+                tmpLocation = Vector2d.zero;
+                GetData();
+            }
             return;
         }
 
+        Stop();
         if (onFinish != null)
             onFinish();
-        Stop();
     }
 
     void ProcessJSON(JSONObject json, Vector2d coordinates) {
@@ -171,34 +181,31 @@ public class PollenDataLoader : ModuleDataLoader
     }    
 
     void SaveDataToDisc() {
-        JSONObject json;
-        if(!File.Exists(filePath)) {
+        JSONObject json = new JSONObject();
+        /*if(!File.Exists(filePath)) {
             json = new JSONObject();
         } else {
             var text = File.ReadAllText(filePath);
             json = new JSONObject(text);
-        }
+        }*/
 
-        if(json.IsArray) {
+        
+        pollenInfos.ForEach(info => {
+            JSONObject infoJSON = new JSONObject();
+            infoJSON.AddField("day", DateTime.Now.DayOfYear);
+            JSONObject pollen = new JSONObject();
+            pollen.AddField(grassJSONKey, info.grassCount);
+            pollen.AddField(treeJSONKey, info.treeCount);
+            pollen.AddField(weedJSONKey, info.weedCount);
+            pollen.AddField(grassDangerJSONKey, info.grassDanger.ToString());
+            pollen.AddField(treeDangerJSONKey, info.treeDanger.ToString());
+            pollen.AddField(weedDangerJSONKey, info.weedDanger.ToString());
+            infoJSON.AddField("pollen", pollen);
+            infoJSON.AddField("latitude", (float)info.coordinates.x);
+            infoJSON.AddField("longitude", (float)info.coordinates.y);
 
-        } else {
-            pollenInfos.ForEach(info => {
-                JSONObject infoJSON = new JSONObject();
-                infoJSON.AddField("day", DateTime.Now.DayOfYear);
-                JSONObject pollen = new JSONObject();
-                pollen.AddField(grassJSONKey, info.grassCount);
-                pollen.AddField(treeJSONKey, info.treeCount);
-                pollen.AddField(weedJSONKey, info.weedCount);
-                pollen.AddField(grassDangerJSONKey, info.grassDanger.ToString());
-                pollen.AddField(treeDangerJSONKey, info.treeDanger.ToString());
-                pollen.AddField(weedDangerJSONKey, info.weedDanger.ToString());
-                infoJSON.AddField("pollen", pollen);
-                infoJSON.AddField("latitude", (float)info.coordinates.x);
-                infoJSON.AddField("longitude", (float)info.coordinates.y);
-
-                json.Add(infoJSON);
-            });
-        }
+            json.Add(infoJSON);
+        });
 
         File.WriteAllText(filePath, json.ToString());
         

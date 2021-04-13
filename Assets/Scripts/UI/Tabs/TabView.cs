@@ -22,20 +22,12 @@ public class TabView : MonoBehaviour
             OnTabSelection();
     }
 
-    protected void CreateTutorialPopup(Settings.Setting setting, Action onPopupCloseAction) {        
-        var showTutorial = Settings.instance.GetValue(setting);
-        if (_tutorialObject == null || (showTutorial != null && (bool)showTutorial == false)) {
-            onPopupCloseAction();
-            return;
+    protected void CreateTutorialPopup() {
+        if (_tutorialObject != null) {
+            GameObject obj = Instantiate(_tutorialObject, Finder.instance.uiMgr.transform);
+            TutorialPanel tutorial = obj.GetComponent<TutorialPanel>();
+            tutorial.Init();
         }
-        GameObject obj = Instantiate(_tutorialObject, Finder.instance.uiMgr.transform);
-        TutorialPanel tutorial = obj.GetComponent<TutorialPanel>();
-        tutorial.Init(okAction: () => {
-            onPopupCloseAction();
-        }, notAgainAction: () => {
-            Settings.instance.Set(setting, false);
-            onPopupCloseAction();
-        });
     }
 
     protected virtual void OnTabSelection() {

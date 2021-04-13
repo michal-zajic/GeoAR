@@ -14,6 +14,7 @@ public class MapTab : TabView {
     [SerializeField] RectTransform _marker = null;
     [SerializeField] Button _locationButton = null;
     [SerializeField] Button _updateButton = null;
+    [SerializeField] Button _helpButton = null;
 
     bool _firstUpdate = false;
     bool _pressedDown = false;
@@ -33,13 +34,15 @@ public class MapTab : TabView {
         _map.OnUpdated += OnMapUpdated;
         _marker.gameObject.SetActive(false);
         _locationButton.onClick.AddListener(CenterOnUserLocation);
-        _updateButton.onClick.AddListener(() => { Finder.instance.moduleMgr.VisualizeOnMap(_map); });
-        SendLocationToState(_map.CenterLatitudeLongitude);
-        UpdateUpdateButton();
-
-        CreateTutorialPopup(Settings.Setting.showMapTutorial, () => {
+        _updateButton.onClick.AddListener(() => {
             AppState.instance.allowMapConnectionAlert = true;
+            Finder.instance.moduleMgr.VisualizeOnMap(_map);
         });
+        _helpButton.onClick.AddListener(() => {
+            CreateTutorialPopup();
+        });
+        SendLocationToState(_map.CenterLatitudeLongitude);
+        UpdateUpdateButton();        
     }
 
     protected override void OnTabSelection() {

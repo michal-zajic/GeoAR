@@ -9,8 +9,6 @@ public class SettingsTab : TabView
 
     private void Start() {
         _resetTutorialsButton.onClick.AddListener(() => {
-            Settings.instance.Set(Settings.Setting.showARTutorial, true);
-            Settings.instance.Set(Settings.Setting.showMapTutorial, true);
             Settings.instance.Set(Settings.Setting.showPlacementHint, true);
         });
     }

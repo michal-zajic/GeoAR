@@ -16,6 +16,7 @@ public class ARTab : TabView
     [SerializeField] Button _lockButton = null;
     [SerializeField] Button _unlockButton = null;
     [SerializeField] Button _updateButton = null;
+    [SerializeField] Button _helpButton = null;
     [SerializeField] Slider _zoomSlider = null;
     [SerializeField] GameObject _placementHintPanel = null;
     [SerializeField] GameObject _alertPopup = null;
@@ -44,6 +45,9 @@ public class ARTab : TabView
             UpdateMapCenter();
             VisualizeData();
         });
+        _helpButton.onClick.AddListener(() => {
+            CreateTutorialPopup();
+        });
 
         _zoomSlider.onValueChanged.AddListener(ZoomChanged);
                 
@@ -62,9 +66,7 @@ public class ARTab : TabView
     void SetLockModeTo(LockMode mode) {
         if (!_firstLock && mode == LockMode.locked) {
             VisualizeData();
-            CreateTutorialPopup(Settings.Setting.showARTutorial, () => {
-                AppState.instance.allowARConnectionAlert = true;
-            });
+            AppState.instance.allowARConnectionAlert = true;
             _firstLock = true;
         }
         _lockMode = mode;
@@ -75,6 +77,7 @@ public class ARTab : TabView
         _planeVis.TogglePlanes(_lockMode == LockMode.unlocked);
         _placementHintPanel.SetActive(_lockMode == LockMode.unlocked);
         _placer.LockStateChangeTo(_lockMode);
+        _helpButton.gameObject.SetActive(_lockMode == LockMode.locked);
 
         Finder.instance.uiMgr.SetModulePanel(_lockMode == LockMode.locked);
     }
@@ -99,7 +102,7 @@ public class ARTab : TabView
             location = AppState.instance.currentMapCenter;
         }
 
-        CreateAlertPopup();
+        //CreateAlertPopup();
 
         _map.SetCenterLatitudeLongitude(location);
         _map.UpdateMap();
