@@ -45,28 +45,30 @@ public class PollenDataLoader : ModuleDataLoader
     int startLocationsCounter = 0;
     bool initialized = false;
     bool firstTime = true;
+    Action onDefaultLoadedAction;
     Vector2d tmpLocation = Vector2d.zero;
+
+    bool defaultsLoaded = false;
 
     public override void Init(AbstractMap map, bool ar = false) {
         base.Init(map, ar);
-        initialized = LoadDataFromDisc();       
+        if(!defaultsLoaded)
+            defaultsLoaded = LoadDataFromDisc();       
     }
 
     public override void GetData(Action onFinish = null) {
-        if (firstTime) {
+        if (firstTime && !defaultsLoaded) {
             tmpLocation = location;
+            location = startLocations[0];
+            onDefaultLoadedAction = onFinish;
             firstTime = false;
         }
-        if (!initialized) {            
-            location = startLocations[0];
+        if (!defaultsLoaded || !IsLocationNearExisting(location)) {            
             LoadJSON((json) => { RequestComplete(json, onFinish); });
             return;
-        }
-        if (IsLocationNearExisting(location)) {
+        } else { 
             if (onFinish != null)
                 onFinish();
-        } else {
-            LoadJSON((json) => { RequestComplete(json, onFinish); });
         }        
     }
 
@@ -96,20 +98,27 @@ public class PollenDataLoader : ModuleDataLoader
     void RequestComplete(JSONObject json, Action onFinish) {             
         ProcessJSON(json, location);
 
-        startLocationsCounter++;
-        if(startLocationsCounter < startLocations.Count - 1) {
-            location = startLocations[startLocationsCounter];
-            GetData();
-            return;
-        } else if(startLocationsCounter == startLocations.Count - 1) {
-            location = startLocations[startLocationsCounter];
-            GetData(SaveDataToDisc);
-            initialized = true;
-            if (tmpLocation != Vector2d.zero) {
-                location = tmpLocation;
-                tmpLocation = Vector2d.zero;
+        if (!defaultsLoaded) {
+            startLocationsCounter++;
+            if (startLocationsCounter < startLocations.Count - 1) {
+                location = startLocations[startLocationsCounter];
+                print(startLocationsCounter);
                 GetData();
+                return;
+            } else if (startLocationsCounter == startLocations.Count - 1) {
+                location = startLocations[startLocationsCounter];
+                print(startLocationsCounter);
+                GetData(() => {
+                    SaveDataToDisc();
+                    defaultsLoaded = true;
+                });
+                return;
             }
+        }
+        if (!tmpLocation.Equals(Vector2d.zero)) {
+            location = tmpLocation;
+            tmpLocation = Vector2d.zero;
+            GetData(onDefaultLoadedAction);
             return;
         }
 
@@ -135,7 +144,7 @@ public class PollenDataLoader : ModuleDataLoader
         pollenInfo.treeDanger = PollenInfo.DangerFromString(danger[treeJSONKey].str);
         pollenInfo.weedDanger = PollenInfo.DangerFromString(danger[weedJSONKey].str);
 
-        pollenInfos.Add(pollenInfo);        
+        pollenInfos.Add(pollenInfo);
     }
 
     bool IsLocationNearExisting(Vector2d location) {
@@ -161,7 +170,7 @@ public class PollenDataLoader : ModuleDataLoader
         if(json.IsArray && Mathf.Abs((int)json[0]["day"].i - DateTime.Now.DayOfYear) > 5) {
             return false;
         }
-
+        pollenInfos = new List<PollenInfo>();
         json.list.ForEach(infoJSON => {
             PollenInfo info = new PollenInfo();
             Vector2d coordinates = new Vector2d(infoJSON["latitude"].f, infoJSON["longitude"].f);

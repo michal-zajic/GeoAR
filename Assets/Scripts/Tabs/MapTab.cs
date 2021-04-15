@@ -14,7 +14,7 @@ public class MapTab : TabView {
     [SerializeField] RectTransform _marker = null;
     [SerializeField] Button _locationButton = null;
     [SerializeField] Button _updateButton = null;
-    [SerializeField] Button _helpButton = null;
+    [SerializeField] Button _onboardingButton = null;
 
     bool _firstUpdate = false;
     bool _pressedDown = false;
@@ -38,8 +38,8 @@ public class MapTab : TabView {
             AppState.instance.allowMapConnectionAlert = true;
             Finder.instance.moduleMgr.VisualizeOnMap(_map);
         });
-        _helpButton.onClick.AddListener(() => {
-            CreateTutorialPopup();
+        _onboardingButton.onClick.AddListener(() => {
+            Finder.instance.uiMgr.ShowOnboarding(true);
         });
         SendLocationToState(_map.CenterLatitudeLongitude);
         UpdateUpdateButton();        
@@ -79,6 +79,10 @@ public class MapTab : TabView {
         }
     }
 
+    void UpdateLocationButton() {
+        _locationButton.gameObject.SetActive(_locationProvider.CurrentLocation.IsLocationServiceEnabled);
+    }
+
     Vector2d ScreenToGeoPoint(Vector2 screenPos) {
         Vector3 position = camera.ScreenToWorldPoint(screenPos);
         return _map.WorldToGeoPosition(position);
@@ -113,47 +117,27 @@ public class MapTab : TabView {
             _marker.position = GeoToScreenPoint(_markerPosition) + new Vector2(0, 30);
     }
 
-    void ProcessLongPress() {
-        if(Vector2.Distance(_pressStartLocation, _pressLastLocation) < 10) {
-            if (!_marker.gameObject.activeInHierarchy)
-                _marker.gameObject.SetActive(true);
-            _marker.position = _pressLastLocation + new Vector2(0, 30);
-            _markerPosition = ScreenToGeoPoint(_pressLastLocation);
-            AppState.instance.markerPlaced = true;
-            AppState.instance.UpdateMarkerLocation(_markerPosition);
-            PerformHapticFeedback();
-
-            //if(Finder.instance.moduleMgr.activeModule != null)
-            //    Finder.instance.moduleMgr.activeModule.dataLoader.GetDataFor(_markerPosition, 200);
-        }
-
-        ResetLongPress();
-    }
-
-    void PerformHapticFeedback() {
-        if (Application.platform == RuntimePlatform.IPhonePlayer && !SystemInfo.deviceModel.StartsWith("iPad")) {
-            IOSNative.StartHapticFeedback(HapticFeedbackTypes.LIGHT);
-        }
-    }
-
     void ResetLongPress() {
         _pressedDown = false;
         _longPressTime = 0;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
+    void UpdateUI() {
         UpdateUserLocationIcon(_locationProvider.CurrentLocation);
         UpdateMarkerLocationIcon();
         UpdateUpdateButton();
+        UpdateLocationButton();
+    }
 
+    void Update()
+    {
+        UpdateUI();
         InputCheck();
 
         if(_pressedDown) {
             _longPressTime += Time.deltaTime;
             if(_longPressTime >= _requiredLongPressTime) {
-                ProcessLongPress();
+                //ProcessLongPress();
             }
         }               
     }

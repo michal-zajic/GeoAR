@@ -15,8 +15,6 @@ public class ARTab : TabView
 {
     [SerializeField] Button _lockButton = null;
     [SerializeField] Button _unlockButton = null;
-    [SerializeField] Button _updateButton = null;
-    [SerializeField] Button _helpButton = null;
     [SerializeField] Slider _zoomSlider = null;
     [SerializeField] GameObject _placementHintPanel = null;
     [SerializeField] GameObject _alertPopup = null;
@@ -40,13 +38,6 @@ public class ARTab : TabView
         });
         _lockButton.onClick.AddListener(() => {
             SetLockModeTo(LockMode.unlocked);
-        });
-        _updateButton.onClick.AddListener(()=> {
-            UpdateMapCenter();
-            VisualizeData();
-        });
-        _helpButton.onClick.AddListener(() => {
-            CreateTutorialPopup();
         });
 
         _zoomSlider.onValueChanged.AddListener(ZoomChanged);
@@ -72,12 +63,10 @@ public class ARTab : TabView
         _lockMode = mode;
         _lockButton.gameObject.SetActive(_lockMode == LockMode.locked);
         _unlockButton.gameObject.SetActive(_lockMode == LockMode.unlocked);
-        _updateButton.gameObject.SetActive(_lockMode == LockMode.locked);
         _zoomSlider.gameObject.SetActive(_lockMode == LockMode.locked);
         _planeVis.TogglePlanes(_lockMode == LockMode.unlocked);
         _placementHintPanel.SetActive(_lockMode == LockMode.unlocked);
         _placer.LockStateChangeTo(_lockMode);
-        _helpButton.gameObject.SetActive(_lockMode == LockMode.locked);
 
         Finder.instance.uiMgr.SetModulePanel(_lockMode == LockMode.locked);
     }

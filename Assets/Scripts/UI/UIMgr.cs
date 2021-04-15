@@ -10,6 +10,8 @@ public class UIMgr : MonoBehaviour
     [SerializeField] GameObject _modulePanel = null;
     [SerializeField] Button _helpButton = null;
     [SerializeField] Image _loadingImage = null;
+    [SerializeField] OnboardingUI _onboardingUI = null;
+    [SerializeField] OnboardingUI _onboardingUIModified = null;
 
     List<ModuleDataLoader> _loaders = new List<ModuleDataLoader>();
     bool _showLoader = true;
@@ -19,6 +21,10 @@ public class UIMgr : MonoBehaviour
             if(Finder.instance.moduleMgr.activeModule != null)
                 Instantiate(Finder.instance.moduleMgr.activeModule.GetTutorialObject(), transform);
         });
+
+        if ((bool)Settings.instance.GetValue(Settings.Setting.showOnboarding)) {
+            ShowOnboarding(false);
+        }
     }
 
     public void AddLoader(ModuleDataLoader loader) {
@@ -39,6 +45,10 @@ public class UIMgr : MonoBehaviour
 
     public void SetLoadingImage(bool active) {
         _showLoader = active;
+    }
+
+    public void ShowOnboarding(bool modified) {
+        (modified ? _onboardingUIModified : _onboardingUI).Show();
     }
 
     public void UpdateHelpButton() {

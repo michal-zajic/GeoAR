@@ -88,6 +88,8 @@ public class ModuleMgr : MonoBehaviour
             if (onFinish != null)
                 onFinish();
         } else {
+            if(ar && arMap != null || !ar && map != null)
+                vis.lastCoord = ar ? arMap.CenterLatitudeLongitude : map.CenterLatitudeLongitude;
             UpdateAndDrawData(ar, onFinish);
         }
     }
@@ -110,6 +112,10 @@ public class ModuleMgr : MonoBehaviour
                 if(onFinish != null)
                     onFinish();
             });
+        } else {
+            if (onFinish != null)
+                onFinish();
         }
+        
     }
 }

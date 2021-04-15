@@ -13,16 +13,18 @@ public abstract class ModuleDataLoader : MonoBehaviour {
 
     private bool completed = false;
     private int timeout = 7;
+    public bool downloading { get; private set; }
 
     public virtual void Init(AbstractMap map, bool ar = false) {
         this.ar = ar;
         range = ar ? 580 : 1000;
         location = map.CenterLatitudeLongitude;
+        downloading = false;
     }
 
     public void Stop() {
         Finder.instance.uiMgr.RemoveLoader(this);
-        print("STOP");
+        downloading = false;
         StopAllCoroutines();
     }
 
@@ -30,6 +32,8 @@ public abstract class ModuleDataLoader : MonoBehaviour {
     protected abstract UnityWebRequest GetRequest();
 
     protected void LoadJSON(Action<JSONObject> onComplete = null) {
+        if (downloading)
+            return;
         Stop();
         Finder.instance.uiMgr.AddLoader(this);
         completed = false;
@@ -58,16 +62,17 @@ public abstract class ModuleDataLoader : MonoBehaviour {
         UnityWebRequest request = GetRequest();
         request.timeout = timeout;
         request.downloadHandler = new DownloadHandlerBuffer();
+        downloading = true;
         yield return request.SendWebRequest();
-        print("AFTER");
         if (request.isNetworkError || request.isHttpError || request.downloadHandler == null || !request.isDone) {
-            Debug.Log(request.error);
+            Debug.Log(request.error);            
             OnDownloadFailed();
             yield break;
         } else {            
             string s = request.downloadHandler.text;
             JSONObject json = new JSONObject(s);
             completed = true;
+            downloading = false;
             if(onComplete != null)
                 onComplete(json);
         }

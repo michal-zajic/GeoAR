@@ -10,7 +10,8 @@ public sealed class Settings {
         moduleDefault,
         zoomDefault,
         useSatellite,
-        showPlacementHint
+        showPlacementHint,
+        showOnboarding
     }
 
     public static Settings instance {
@@ -69,7 +70,7 @@ public sealed class Settings {
     public string GetDescriptionFor(Setting setting) {
         switch (setting) {
             case Setting.zoomDefault:
-                return "Nastavte výchozí přiblížení mapy v rozšířené realitě. Větší přiblížení zobrazí menší oblast na stejném úseku mapy, než než menší přiblížení.";
+                return "Nastavte výchozí přiblížení mapy v rozšířené realitě. Větší přiblížení zobrazí menší oblast na stejném úseku mapy, než malé přiblížení.";
             default:
                 return "";
         }
@@ -116,6 +117,8 @@ public sealed class Settings {
                 return 0;
             case Setting.showPlacementHint:
                 return 0;
+            case Setting.showOnboarding:
+                return 0;
             default:
                 return -1;
         }
@@ -132,6 +135,8 @@ public sealed class Settings {
             case Setting.useSatellite:
                 return true;
             case Setting.showPlacementHint:
+                return true;
+            case Setting.showOnboarding:
                 return true;
             default:
                 return null;

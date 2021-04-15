@@ -7,7 +7,6 @@ public class TabView : MonoBehaviour
 {
     [SerializeField] Camera _camera = null;
     [SerializeField] GameObject _objectToHide = null;
-    [SerializeField] GameObject _tutorialObject = null;
 
     protected Camera camera => _camera;    
 
@@ -20,14 +19,6 @@ public class TabView : MonoBehaviour
         _objectToHide.SetActive(active);
         if(active)
             OnTabSelection();
-    }
-
-    protected void CreateTutorialPopup() {
-        if (_tutorialObject != null) {
-            GameObject obj = Instantiate(_tutorialObject, Finder.instance.uiMgr.transform);
-            TutorialPanel tutorial = obj.GetComponent<TutorialPanel>();
-            tutorial.Init();
-        }
     }
 
     protected virtual void OnTabSelection() {
