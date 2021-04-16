@@ -26,7 +26,6 @@ public class ARTab : TabView
  
     LockMode _lockMode = LockMode.unlocked;
 
-    bool _firstUpdate = false;
     bool _mapInitialized = false;
     bool _firstLock = false;
 
@@ -48,9 +47,7 @@ public class ARTab : TabView
         _map.OnInitialized += () => {
             _mapInitialized = true;
             _zoomSlider.value = _zoomSlider.minValue + (_zoomSlider.maxValue - _zoomSlider.minValue) * Settings.instance.GetDefaultZoom();
-            if (_firstUpdate) {
-                UpdateMapCenter();                
-            }
+            UpdateMapCenter();
         };
     }
 
@@ -81,45 +78,32 @@ public class ARTab : TabView
     }
 
     void UpdateMapCenter() {
-        Vector2d location;
-        if (AppState.instance.markerPlaced) {
-            location = AppState.instance.markerLocation;
+        if (UpdateCheck()) {
+            _map.SetCenterLatitudeLongitude(AppState.instance.transferLocation);
+            _map.UpdateMap();
+            if (_firstLock) {
+                if (Finder.instance.moduleMgr.activeModule)
+                    Finder.instance.moduleMgr.activeModule.arVisualizer.Disable();
+                VisualizeData();
+            }
         }
-        else if (_locationProvider.CurrentLocation.IsLocationServiceEnabled && Settings.instance.IsGPSDefault()) {
-            location = _locationProvider.CurrentLocation.LatitudeLongitude;
-        } else {
-            location = AppState.instance.currentMapCenter;
-        }
-
-        //CreateAlertPopup();
-
-        _map.SetCenterLatitudeLongitude(location);
-        _map.UpdateMap();
     }
 
-    void CreateAlertPopup() {
-        var showPlacement = Settings.instance.GetValue(Settings.Setting.showPlacementHint);
-        if ((showPlacement != null && (bool)showPlacement == false) || AppState.instance.markerPlaced)
-            return;
-        GameObject obj = Instantiate(_alertPopup, Finder.instance.uiMgr.transform);
-        AlertPanel popup = obj.GetComponent<AlertPanel>();
-        bool satelliteDefault = Settings.instance.IsGPSDefault();
-        popup.Init(satelliteDefault, null, () => {
-            Settings.instance.Set(Settings.Setting.showPlacementHint, false);
-        });
+    bool UpdateCheck() {
+        return _map.CenterLatitudeLongitude != AppState.instance.transferLocation;
     }
 
     protected override void OnTabSelection() {
         base.OnTabSelection();
-        if(!_firstUpdate) {            
-            if(_mapInitialized)
-                UpdateMapCenter();
-            _firstUpdate = true;
-        }
+        
         ImagerySourceType type = (bool)Settings.instance.GetValue(Settings.Setting.useSatellite) ? ImagerySourceType.MapboxSatelliteStreet : ImagerySourceType.MapboxStreets;
         _map.ImageLayer.SetProperties(type, true, false, true);
 
         Finder.instance.uiMgr.SetModulePanel(_lockMode == LockMode.locked);
         Finder.instance.uiMgr.SetLoadingImage(true);
+
+        if (_mapInitialized) {
+            UpdateMapCenter();
+        }
     }
 }

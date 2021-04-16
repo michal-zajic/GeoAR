@@ -42,11 +42,12 @@ public class SegmentObject : MonoBehaviour
 
     IEnumerator SpawnCars() {
         while (true) {
-            if (_cars.Count < _carLimit) {
+            if (AppState.instance.carsSpawned < _carLimit) {
                 GameObject carObj = Instantiate(_carObject, _map.transform);
                 Car car = carObj.GetComponent<Car>();
                 car.Init(_segmentPoints, _map, _speed, _jamFactor);
                 car.onDestroy += () => { _cars.Remove(car); };
+                AppState.instance.carsSpawned += 1;
                 _cars.Add(car);
             }
             //the slower the cars go, the slower the spawner should spawn, so the cars arent overlapping too much

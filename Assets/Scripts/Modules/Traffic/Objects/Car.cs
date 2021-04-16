@@ -47,6 +47,7 @@ public class Car : HideableObject
     }
 
     private void OnDestroy() {
+        AppState.instance.carsSpawned -= 1;
         onDestroy();
     }
 }

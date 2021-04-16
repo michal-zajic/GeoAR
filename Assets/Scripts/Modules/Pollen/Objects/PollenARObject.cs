@@ -19,7 +19,7 @@ public class PollenARObject : MonoBehaviour
         var emission = ps.emission;
         emission.rateOverTime = 10;
         var main = ps.main;
-        main.maxParticles = count;
+        main.maxParticles = Mathf.Max(0, count - 50);
         main.startSpeed = 0.15f;
         main.startSize = 0.1f;
         main.startLifetime = 30.0f;

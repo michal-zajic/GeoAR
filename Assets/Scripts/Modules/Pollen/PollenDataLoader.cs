@@ -60,7 +60,11 @@ public class PollenDataLoader : ModuleDataLoader
         if (firstTime && !defaultsLoaded) {
             tmpLocation = location;
             location = startLocations[0];
-            onDefaultLoadedAction = onFinish;
+            onDefaultLoadedAction = () => {
+                SaveDataToDisc();
+                defaultsLoaded = true;
+                onFinish();
+            };
             firstTime = false;
         }
         if (!defaultsLoaded || !IsLocationNearExisting(location)) {            
@@ -102,22 +106,20 @@ public class PollenDataLoader : ModuleDataLoader
             startLocationsCounter++;
             if (startLocationsCounter < startLocations.Count - 1) {
                 location = startLocations[startLocationsCounter];
-                print(startLocationsCounter);
+                print(startLocationsCounter);                
                 GetData();
                 return;
             } else if (startLocationsCounter == startLocations.Count - 1) {
                 location = startLocations[startLocationsCounter];
                 print(startLocationsCounter);
-                GetData(() => {
-                    SaveDataToDisc();
-                    defaultsLoaded = true;
-                });
+                GetData();
                 return;
             }
         }
         if (!tmpLocation.Equals(Vector2d.zero)) {
             location = tmpLocation;
             tmpLocation = Vector2d.zero;
+            print("get tmp");
             GetData(onDefaultLoadedAction);
             return;
         }

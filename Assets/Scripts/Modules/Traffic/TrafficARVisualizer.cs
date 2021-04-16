@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class TrafficARVisualizer : ModuleARVisualizer {
     [SerializeField] GameObject _segmentObject = null;
-    [SerializeField] [Range(50, 300)] int _carLimit = 120;
+    [SerializeField] [Range(50, 300)] int _carLimit = 100;
 
     public override void Disable() {
         objects.ForEach(obj => {
@@ -26,8 +26,7 @@ public class TrafficARVisualizer : ModuleARVisualizer {
         loader.arSegments.ForEach(segment => {
             GameObject segmentGameObj = Instantiate(_segmentObject, transform);            
             SegmentObject segmentObject = segmentGameObj.GetComponent<SegmentObject>();
-            int carLimit = Math.Max(2, _carLimit / loader.arSegments.Count);
-            segmentObject.Init(segment.coordinateList, map, segment.jamFactor, segment.speed, carLimit);
+            segmentObject.Init(segment.coordinateList, map, segment.jamFactor, segment.speed, _carLimit);
             objects.Add(segmentGameObj);
         });
     }

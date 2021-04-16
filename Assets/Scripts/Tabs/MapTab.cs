@@ -11,28 +11,28 @@ public class MapTab : TabView {
     [SerializeField] AbstractMap _map = null;
     [SerializeField] DeviceLocationProvider _locationProvider = null;
     [SerializeField] Image _userLocationImage = null;
+    [SerializeField] GameObject _zoomAlert = null;
     [SerializeField] RectTransform _marker = null;
     [SerializeField] Button _locationButton = null;
     [SerializeField] Button _updateButton = null;
     [SerializeField] Button _onboardingButton = null;
+    [SerializeField] Button _transferButton = null;
 
     bool _firstUpdate = false;
-    bool _pressedDown = false;
-
-    float _requiredLongPressTime = 0.7f;
-    float _longPressTime = 0;
-
-    Vector2 _pressStartLocation;
-    Vector2 _pressLastLocation;
 
     Vector2d _corner1 = new Vector2d(48.5476636, 11.6568511);
     Vector2d _corner2 = new Vector2d(51.2190594, 19.0396636);
-    Vector2d _markerPosition;
+    Vector2d _currentARPosition = Vector2d.zero;
 
     void Start()
     {
-        _map.OnUpdated += OnMapUpdated;
-        _marker.gameObject.SetActive(false);
+        _marker.gameObject.SetActive(false);       
+
+        SendTransferLocationToState(_map.CenterLatitudeLongitude);
+        InitButtons();       
+    }
+
+    void InitButtons() {
         _locationButton.onClick.AddListener(CenterOnUserLocation);
         _updateButton.onClick.AddListener(() => {
             AppState.instance.allowMapConnectionAlert = true;
@@ -41,13 +41,14 @@ public class MapTab : TabView {
         _onboardingButton.onClick.AddListener(() => {
             Finder.instance.uiMgr.ShowOnboarding(true);
         });
-        SendLocationToState(_map.CenterLatitudeLongitude);
-        UpdateUpdateButton();        
+        _transferButton.onClick.AddListener(() => {
+            _currentARPosition = _map.CenterLatitudeLongitude;
+            AppState.instance.UpdateTransferLocation(_currentARPosition);
+        });
     }
 
     protected override void OnTabSelection() {
         base.OnTabSelection();
-        ResetLongPress();
 
         ImagerySourceType type = (bool)Settings.instance.GetValue(Settings.Setting.useSatellite) ? ImagerySourceType.MapboxSatelliteStreet : ImagerySourceType.MapboxStreets;
         _map.ImageLayer.SetProperties(type, true, false, true);
@@ -58,17 +59,12 @@ public class MapTab : TabView {
     void CenterOnUserLocation() {
         Vector2d loc = _locationProvider.CurrentLocation.LatitudeLongitude;
         _map.SetCenterLatitudeLongitude(loc);
-        OnMapUpdated();
         _map.SetZoom(15);
         _map.UpdateMap();
     }
 
-    void SendLocationToState(Vector2d location) {
-        AppState.instance.UpdateMapCenter(location);
-    }
-
-    void OnMapUpdated() {
-        SendLocationToState(_map.CenterLatitudeLongitude);       
+    void SendTransferLocationToState(Vector2d location) {
+        AppState.instance.UpdateTransferLocation(location);
     }
 
     void UpdateUpdateButton() {
@@ -101,6 +97,7 @@ public class MapTab : TabView {
         Vector2d latlon = location.LatitudeLongitude;
         if (!_firstUpdate && latlon.x > _corner1.x && latlon.x < _corner2.x && latlon.y > _corner1.y && latlon.y < _corner2.y) {
             _firstUpdate = true;
+            SendTransferLocationToState(latlon);
             CenterOnUserLocation();
         }
         if(!_userLocationImage.gameObject.activeInHierarchy)
@@ -112,69 +109,30 @@ public class MapTab : TabView {
 
     }
 
-    void UpdateMarkerLocationIcon() {
-        if (_marker.gameObject.activeInHierarchy)
-            _marker.position = GeoToScreenPoint(_markerPosition) + new Vector2(0, 30);
+    void UpdateZoomAlert() {
+        if(Finder.instance.moduleMgr.activeModule != null) {
+            if(_map.Zoom < Finder.instance.moduleMgr.activeModule.GetMinZoom()) {
+                _zoomAlert.SetActive(true);
+                return;
+            } 
+        }
+        _zoomAlert.SetActive(false);
     }
 
-    void ResetLongPress() {
-        _pressedDown = false;
-        _longPressTime = 0;
+    void UpdateTransferButton() {
+        _transferButton.gameObject.SetActive(!_currentARPosition.Equals(_map.CenterLatitudeLongitude));
     }
 
     void UpdateUI() {
         UpdateUserLocationIcon(_locationProvider.CurrentLocation);
-        UpdateMarkerLocationIcon();
         UpdateUpdateButton();
         UpdateLocationButton();
+        UpdateTransferButton();
+        UpdateZoomAlert();
     }
 
     void Update()
     {
-        UpdateUI();
-        InputCheck();
-
-        if(_pressedDown) {
-            _longPressTime += Time.deltaTime;
-            if(_longPressTime >= _requiredLongPressTime) {
-                //ProcessLongPress();
-            }
-        }               
-    }
-
-    void InputCheck() {
-        if (EventSystem.current.IsPointerOverGameObject()) {
-            return;
-        }
-        foreach (var touch in Input.touches) {
-            if (EventSystem.current.IsPointerOverGameObject(touch.fingerId)) {
-                return;
-            }
-        }
-        if (Input.GetMouseButtonDown(0)) {
-            OnPointerDown(Input.mousePosition);
-        } else if (Input.GetMouseButtonUp(0)) {
-            OnPointerUp(Input.mousePosition);
-        } else if (Input.GetMouseButton(0)) {
-            OnDrag(Input.mousePosition);
-        }
-    }
-
-    void OnPointerUp(Vector2 position) {
-        if(_pressedDown && _longPressTime < Time.deltaTime * 5) {
-            _marker.gameObject.SetActive(false);
-            AppState.instance.markerPlaced = false;            
-        }
-        ResetLongPress();
-    }
-
-    void OnPointerDown(Vector2 position) {
-        _pressedDown = true;
-        _pressStartLocation = position;
-        _pressLastLocation = _pressStartLocation;
-    }
-
-    void OnDrag(Vector2 position) {
-        _pressLastLocation = position;
+        UpdateUI();        
     }
 }
