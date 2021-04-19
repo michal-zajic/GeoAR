@@ -28,7 +28,8 @@ public class SegmentObject : MonoBehaviour
 
     public void OnDestroy() {
         for(int i = _cars.Count - 1; i >= 0; i--) {
-            Destroy(_cars[i].gameObject);
+            if(_cars[i] != null)
+                Destroy(_cars[i].gameObject);
         }
     }
 
@@ -42,14 +43,16 @@ public class SegmentObject : MonoBehaviour
 
     IEnumerator SpawnCars() {
         while (true) {
-            if (_cars.Count < _carLimit) {
+            if (AppState.instance.carsSpawned < _carLimit) {
                 GameObject carObj = Instantiate(_carObject, _map.transform);
                 Car car = carObj.GetComponent<Car>();
                 car.Init(_segmentPoints, _map, _speed, _jamFactor);
                 car.onDestroy += () => { _cars.Remove(car); };
+                AppState.instance.carsSpawned += 1;
                 _cars.Add(car);
             }
-            yield return new WaitForSeconds(Random.Range(3, 8) + _jamFactor / 2 );
+            //the slower the cars go, the slower the spawner should spawn, so the cars arent overlapping too much
+            yield return new WaitForSeconds(Random.Range(3, 8) + _jamFactor / 2 );  
         }
     }
 }

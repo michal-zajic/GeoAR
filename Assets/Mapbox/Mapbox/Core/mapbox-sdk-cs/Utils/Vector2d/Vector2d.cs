@@ -205,10 +205,14 @@ namespace Mapbox.Utils
 			if (!(other is Vector2d))
 				return false;
 			Vector2d vector2d = (Vector2d)other;
-			if (this.x.Equals(vector2d.x))
-				return this.y.Equals(vector2d.y);
+			if (AlmostEquals(this.x, vector2d.x))
+				return AlmostEquals(this.y, vector2d.y);
 			else
 				return false;
+		}
+
+		public static bool AlmostEquals(double first, double second) {
+			return Math.Abs(first - second) < 0.0000001;
 		}
 
 		public static double Dot(Vector2d lhs, Vector2d rhs)

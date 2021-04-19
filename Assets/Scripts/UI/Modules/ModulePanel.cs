@@ -16,7 +16,7 @@ public class ModulePanel : MonoBehaviour
 
     RectTransform _rt;
     float speed = 100;
-    // Start is called before the first frame update
+
     void Start()
     {
         _rt = GetComponent<RectTransform>();
@@ -74,12 +74,7 @@ public class ModulePanel : MonoBehaviour
     }
 
     public void Dismiss() {
+        StopAllCoroutines();
         StartCoroutine(MovePanel(false));
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

@@ -52,7 +52,7 @@ MonoBehaviour:
     y: 0
   _segmentObject: {fileID: 377558889263533049, guid: 08af0be6a196440b0955a57f688313dd,
     type: 3}
-  _carLimit: 120
+  _carLimit: 60
 --- !u!114 &5791016052654828916
 MonoBehaviour:
   m_ObjectHideFlags: 0

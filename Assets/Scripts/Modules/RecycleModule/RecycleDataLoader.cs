@@ -15,14 +15,14 @@ public class RecycleDataLoader : ModuleDataLoader
     public List<Container> arContainers { get; private set; }
 
     public override void GetData(Action onFinish = null) {
-        StartCoroutine(LoadJSON(onFinish));
+        LoadJSON((json) => { ProcessJSON(json, onFinish); });
     }
 
     public override void Init(AbstractMap map, bool ar = false) {
         base.Init(map, ar);                
     }
 
-    IEnumerator LoadJSON(Action onFinish) {
+    protected override UnityWebRequest GetRequest() {
         string locationString = "";
         string rangeString = "";
         if (range > 0) {
@@ -33,27 +33,14 @@ public class RecycleDataLoader : ModuleDataLoader
 
         UnityWebRequest request = UnityWebRequest.Get(address);
         request.SetRequestHeader("x-access-token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1lZ3JheG9uMjJAZ21haWwuY29tIiwiaWQiOjY5NCwibmFtZSI6bnVsbCwic3VybmFtZSI6bnVsbCwiaWF0IjoxNjE1NjU0NTM3LCJleHAiOjExNjE1NjU0NTM3LCJpc3MiOiJnb2xlbWlvIiwianRpIjoiMmZhYTM1NmItZDMzOC00YTYwLWE2ZWYtNjJkYjQ1ZDVlMWZkIn0.52nQNk3umt8GnOGUABnfEDjxQvpLjOin-l07iV1WJfM");
-
-        yield return request.SendWebRequest();
-
-        if (request.isNetworkError || request.isHttpError) {
-            Debug.Log(request.error);
-            Finder.instance.uiMgr.ShowNoConnectionAlert(ar);
-            yield break;            
-        } else {
-            string s = request.downloadHandler.text;
-            JSONObject json = new JSONObject(s);
-
-            StartCoroutine(ProcessJSON(json, onFinish, ar));
-        }
+        return request;
     }
 
-    IEnumerator ProcessJSON(JSONObject json, Action onFinish, bool ar) {
+    void ProcessJSON(JSONObject json, Action onFinish = null) {
         if (ar)
             arContainers = new List<Container>();
         else
             containers = new List<Container>();
-        int i = 0;
 
         if (json.HasField("features")) {
             JSONObject features = json.GetField("features");
@@ -70,17 +57,16 @@ public class RecycleDataLoader : ModuleDataLoader
 
                 container.trashTypes = new List<Container.TrashType>();
                 JSONObject bins = properties["containers"];
+                if (bins == null)
+                    continue;
                 foreach(JSONObject bin in bins.list) {
                     container.trashTypes.Add((Container.TrashType)bin["trash_type"]["id"].i);
                 }
 
                 (ar ? arContainers : containers).Add(container);
-
-                i++;
-                if (i % 10 == 0)
-                    yield return null;
             }
         }
+        Stop();
         if(onFinish != null)
             onFinish();
     }

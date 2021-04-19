@@ -15,17 +15,14 @@ public class AppState
     }
     private static AppState _instance = null;
 
-    public Vector2d currentMapCenter;
-    public Vector2d markerLocation;
-    public bool markerPlaced;
+    public Vector2d transferLocation { get; private set; }
 
     public bool allowMapConnectionAlert = false;
     public bool allowARConnectionAlert = false;
 
-    public void UpdateMarkerLocation(Vector2d location) {
-        markerLocation = location;
-    }
-    public void UpdateMapCenter(Vector2d center) {
-        currentMapCenter = center;
+    public int carsSpawned;
+
+    public void UpdateTransferLocation(Vector2d location) {
+        transferLocation = location;
     }
 }

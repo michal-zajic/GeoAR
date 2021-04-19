@@ -80,7 +80,8 @@ MonoBehaviour:
   moduleName: "T\u0159\xEDd\u011Bn\xFD odpad"
   description: "Tento modul zobrazuje stanovi\u0161t\u011B t\u0159\xEDd\u011Bn\xE9ho
     odpadu. Na map\u011B jsou data vizualizov\xE1na kol\xE1\u010Dov\xFDm grafem.
-    V roz\u0161\xED\u0159en\xE9 realit\u011B jsou tyto grafy spojeny s modelem kontejneru."
+    V roz\u0161\xED\u0159en\xE9 realit\u011B jsou tyto grafy spojeny s modelem kontejneru.
+    Data jsou k dispozici pouze pro hl. m. Praha."
   icon: {fileID: 21300000, guid: 50a2b5eeb942d4b7abf210631dfc86e7, type: 3}
   tutorialObject: {fileID: 2916623111573991934, guid: 8467bd4a4247249e9a6607d4d022a556,
     type: 3}

@@ -7,7 +7,7 @@ using UnityEngine;
 public abstract class ModuleVisualizer : MonoBehaviour
 {
     protected List<GameObject> objects = new List<GameObject>();
-    [HideInInspector] public Vector2d lastCoord;
+    [HideInInspector] public Vector2d lastCoord = Vector2d.zero;
     public abstract void Draw(ModuleDataLoader data, AbstractMap map);
     public abstract void Enable();
     public abstract void Disable();

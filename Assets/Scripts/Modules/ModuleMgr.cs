@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Mapbox.Unity.Map;
 using Mapbox.Utils;
@@ -14,8 +15,8 @@ public class ModuleMgr : MonoBehaviour
     [HideInInspector]
     public Module activeModule = null;
 
-    private Vector2d lastCoord;
-    private Vector2d lastCoordAR;
+    private Vector2d lastCoord = Vector2d.zero;
+    private Vector2d lastCoordAR = Vector2d.zero;
     private AbstractMap map = null;
     private AbstractMap arMap = null;
 
@@ -45,6 +46,7 @@ public class ModuleMgr : MonoBehaviour
         if(activeModule != null) {
             activeModule.arVisualizer.Disable();
             activeModule.mapVisualizer.Disable();
+            activeModule.dataLoader.Stop();
         }
 
         if(moduleName == null) {
@@ -54,8 +56,9 @@ public class ModuleMgr : MonoBehaviour
             if(module.name == moduleName) {
                 activeModule = module;
 
-                EnableVisualizer(true);
-                EnableVisualizer(false);
+                EnableVisualizer(true, () => {
+                    EnableVisualizer(false);
+                });
             }
         });
         Finder.instance.uiMgr.UpdateHelpButton();
@@ -74,23 +77,27 @@ public class ModuleMgr : MonoBehaviour
     }
 
     //If coordinates didnt change, just enable the objects, otherwise reload data
-    private void EnableVisualizer(bool ar) {
+    private void EnableVisualizer(bool ar, Action onFinish = null) {
         ModuleVisualizer vis;
         if (ar)
             vis = activeModule.arVisualizer;
         else
             vis = activeModule.mapVisualizer;
-        if (vis.lastCoord.Equals(ar ? lastCoordAR : lastCoord)) {
+        if (!vis.lastCoord.Equals(Vector2d.zero) && vis.lastCoord.Equals(ar ? lastCoordAR : lastCoord)) {
             vis.Enable();
+            if (onFinish != null)
+                onFinish();
         } else {
-            UpdateAndDrawData(ar);
+            if(ar && arMap != null || !ar && map != null)
+                vis.lastCoord = ar ? arMap.CenterLatitudeLongitude : map.CenterLatitudeLongitude;
+            UpdateAndDrawData(ar, onFinish);
         }
     }
 
     //Refreshes data on new map coordinates
-    private void UpdateAndDrawData(bool ar) {
+    private void UpdateAndDrawData(bool ar, Action onFinish = null) {
         AbstractMap currentMap = ar ? arMap : map;
-        if (activeModule != null && currentMap != null && currentMap.Zoom >= activeModule.GetMinZoom()) {
+        if (activeModule != null && currentMap != null) {
             ModuleVisualizer vis;
             if (ar)
                 vis = activeModule.arVisualizer;
@@ -100,9 +107,15 @@ public class ModuleMgr : MonoBehaviour
             vis.lastCoord = center;
 
             activeModule.dataLoader.Init(currentMap, ar);
-            activeModule.dataLoader.GetData(() => {                
+            activeModule.dataLoader.GetData(() => {
                 vis.Draw(activeModule.dataLoader, currentMap);
+                if(onFinish != null)
+                    onFinish();
             });
+        } else {
+            if (onFinish != null)
+                onFinish();
         }
+        
     }
 }

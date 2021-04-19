@@ -13,6 +13,13 @@ public class PollenDataLoader : ModuleDataLoader
     string baseAddress = "https://api.ambeedata.com/latest/pollen/by-lat-lng?";
     string fileName = "pollenInfo.json";
 
+    const string grassJSONKey = "grass_pollen";
+    const string treeJSONKey = "tree_pollen";
+    const string weedJSONKey = "weed_pollen";
+    const string grassDangerJSONKey = "grass_danger";
+    const string treeDangerJSONKey = "tree_danger";
+    const string weedDangerJSONKey = "weed_danger";
+
     string filePath {
         get {
             return Application.persistentDataPath + "/" + fileName;
@@ -36,24 +43,36 @@ public class PollenDataLoader : ModuleDataLoader
     };
 
     int startLocationsCounter = 0;
+    bool initialized = false;
+    bool firstTime = true;
+    Action onDefaultLoadedAction;
+    Vector2d tmpLocation = Vector2d.zero;
 
-    private void Start() {
-        if (!LoadDataFromDisc()) {
-            location = startLocations[0];
-            GetData();
-        }        
-    }
+    bool defaultsLoaded = false;
 
     public override void Init(AbstractMap map, bool ar = false) {
         base.Init(map, ar);
+        if(!defaultsLoaded)
+            defaultsLoaded = LoadDataFromDisc();       
     }
 
     public override void GetData(Action onFinish = null) {
-        if (IsLocationNearExisting(location)) {
+        if (firstTime && !defaultsLoaded) {
+            tmpLocation = location;
+            location = startLocations[0];
+            onDefaultLoadedAction = () => {
+                SaveDataToDisc();
+                defaultsLoaded = true;
+                onFinish();
+            };
+            firstTime = false;
+        }
+        if (!defaultsLoaded || !IsLocationNearExisting(location)) {            
+            LoadJSON((json) => { RequestComplete(json, onFinish); });
+            return;
+        } else { 
             if (onFinish != null)
                 onFinish();
-        } else {
-            StartCoroutine(LoadJSON(location, onFinish, ar));
         }        
     }
 
@@ -70,38 +89,47 @@ public class PollenDataLoader : ModuleDataLoader
         return nearestInfo;
     }
 
-    IEnumerator LoadJSON(Vector2d location, Action onFinish, bool ar) {        
+    protected override UnityWebRequest GetRequest() {
         string locationString = "lat=" + location.x + "&lng=" + location.y;
-        
+
         Uri address = new Uri(baseAddress + locationString);
 
         UnityWebRequest request = UnityWebRequest.Get(address);
         request.SetRequestHeader("x-api-key", "M9rf3WXvhx2PlxGAIDKgyv1N5KQnGev8ZtR2AzHj");
-
-        yield return request.SendWebRequest();
-
-        if (request.isNetworkError || request.isHttpError) {
-            Debug.Log(request.error);
-            Finder.instance.uiMgr.ShowNoConnectionAlert(ar);
-            yield break;
-        } else {
-            string s = request.downloadHandler.text;
-            JSONObject json = new JSONObject(s);
-
-            ProcessJSON(json, location, onFinish);
-
-            startLocationsCounter++;
-            if(startLocationsCounter < startLocations.Count - 1) {
-                location = startLocations[startLocationsCounter];
-                GetData();
-            } else if(startLocationsCounter == startLocations.Count - 1) {
-                location = startLocations[startLocationsCounter];
-                GetData(SaveDataToDisc);
-            }
-        }
+        return request;
     }
 
-    void ProcessJSON(JSONObject json, Vector2d coordinates, Action onFinish) {
+    void RequestComplete(JSONObject json, Action onFinish) {             
+        ProcessJSON(json, location);
+
+        if (!defaultsLoaded) {
+            startLocationsCounter++;
+            if (startLocationsCounter < startLocations.Count - 1) {
+                location = startLocations[startLocationsCounter];
+                print(startLocationsCounter);                
+                GetData();
+                return;
+            } else if (startLocationsCounter == startLocations.Count - 1) {
+                location = startLocations[startLocationsCounter];
+                print(startLocationsCounter);
+                GetData();
+                return;
+            }
+        }
+        if (!tmpLocation.Equals(Vector2d.zero)) {
+            location = tmpLocation;
+            tmpLocation = Vector2d.zero;
+            print("get tmp");
+            GetData(onDefaultLoadedAction);
+            return;
+        }
+
+        Stop();
+        if (onFinish != null)
+            onFinish();
+    }
+
+    void ProcessJSON(JSONObject json, Vector2d coordinates) {
         if(json.GetField("message").str != "Success")
             return;
 
@@ -111,16 +139,14 @@ public class PollenDataLoader : ModuleDataLoader
 
         PollenInfo pollenInfo = new PollenInfo();
         pollenInfo.coordinates = coordinates;
-        pollenInfo.grassCount = (int)count["grass_pollen"].i;
-        pollenInfo.treeCount = (int)count["tree_pollen"].i;
-        pollenInfo.weedCount = (int)count["weed_pollen"].i;
-        pollenInfo.grassDanger = PollenInfo.DangerFromString(danger["grass_pollen"].str);
-        pollenInfo.treeDanger = PollenInfo.DangerFromString(danger["tree_pollen"].str);
-        pollenInfo.weedDanger = PollenInfo.DangerFromString(danger["weed_pollen"].str);
+        pollenInfo.grassCount = (int)count[grassJSONKey].i;
+        pollenInfo.treeCount = (int)count[treeJSONKey].i;
+        pollenInfo.weedCount = (int)count[weedJSONKey].i;
+        pollenInfo.grassDanger = PollenInfo.DangerFromString(danger[grassJSONKey].str);
+        pollenInfo.treeDanger = PollenInfo.DangerFromString(danger[treeJSONKey].str);
+        pollenInfo.weedDanger = PollenInfo.DangerFromString(danger[weedJSONKey].str);
 
         pollenInfos.Add(pollenInfo);
-        if(onFinish != null)
-            onFinish();
     }
 
     bool IsLocationNearExisting(Vector2d location) {
@@ -146,18 +172,18 @@ public class PollenDataLoader : ModuleDataLoader
         if(json.IsArray && Mathf.Abs((int)json[0]["day"].i - DateTime.Now.DayOfYear) > 5) {
             return false;
         }
-
+        pollenInfos = new List<PollenInfo>();
         json.list.ForEach(infoJSON => {
             PollenInfo info = new PollenInfo();
             Vector2d coordinates = new Vector2d(infoJSON["latitude"].f, infoJSON["longitude"].f);
             JSONObject pollenJSON = infoJSON["pollen"];
             info.coordinates = coordinates;
-            info.grassCount = (int)pollenJSON["grass_pollen"].i;
-            info.treeCount = (int)pollenJSON["tree_pollen"].i;
-            info.weedCount = (int)pollenJSON["weed_pollen"].i;
-            info.grassDanger = PollenInfo.DangerFromString(pollenJSON["grass_danger"].str);
-            info.treeDanger = PollenInfo.DangerFromString(pollenJSON["tree_danger"].str);
-            info.weedDanger = PollenInfo.DangerFromString(pollenJSON["weed_danger"].str);
+            info.grassCount = (int)pollenJSON[grassJSONKey].i;
+            info.treeCount = (int)pollenJSON[treeJSONKey].i;
+            info.weedCount = (int)pollenJSON[weedJSONKey].i;
+            info.grassDanger = PollenInfo.DangerFromString(pollenJSON[grassDangerJSONKey].str);
+            info.treeDanger = PollenInfo.DangerFromString(pollenJSON[treeDangerJSONKey].str);
+            info.weedDanger = PollenInfo.DangerFromString(pollenJSON[weedDangerJSONKey].str);
 
             pollenInfos.Add(info);
         });
@@ -166,34 +192,31 @@ public class PollenDataLoader : ModuleDataLoader
     }    
 
     void SaveDataToDisc() {
-        JSONObject json;
-        if(!File.Exists(filePath)) {
+        JSONObject json = new JSONObject();
+        /*if(!File.Exists(filePath)) {
             json = new JSONObject();
         } else {
             var text = File.ReadAllText(filePath);
             json = new JSONObject(text);
-        }
+        }*/
 
-        if(json.IsArray) {
+        
+        pollenInfos.ForEach(info => {
+            JSONObject infoJSON = new JSONObject();
+            infoJSON.AddField("day", DateTime.Now.DayOfYear);
+            JSONObject pollen = new JSONObject();
+            pollen.AddField(grassJSONKey, info.grassCount);
+            pollen.AddField(treeJSONKey, info.treeCount);
+            pollen.AddField(weedJSONKey, info.weedCount);
+            pollen.AddField(grassDangerJSONKey, info.grassDanger.ToString());
+            pollen.AddField(treeDangerJSONKey, info.treeDanger.ToString());
+            pollen.AddField(weedDangerJSONKey, info.weedDanger.ToString());
+            infoJSON.AddField("pollen", pollen);
+            infoJSON.AddField("latitude", (float)info.coordinates.x);
+            infoJSON.AddField("longitude", (float)info.coordinates.y);
 
-        } else {
-            pollenInfos.ForEach(info => {
-                JSONObject infoJSON = new JSONObject();
-                infoJSON.AddField("day", DateTime.Now.DayOfYear);
-                JSONObject pollen = new JSONObject();
-                pollen.AddField("grass_pollen", info.grassCount);
-                pollen.AddField("tree_pollen", info.treeCount);
-                pollen.AddField("weed_pollen", info.weedCount);
-                pollen.AddField("grass_danger", info.grassDanger.ToString());
-                pollen.AddField("tree_danger", info.treeDanger.ToString());
-                pollen.AddField("weed_danger", info.weedDanger.ToString());
-                infoJSON.AddField("pollen", pollen);
-                infoJSON.AddField("latitude", (float)info.coordinates.x);
-                infoJSON.AddField("longitude", (float)info.coordinates.y);
-
-                json.Add(infoJSON);
-            });
-        }
+            json.Add(infoJSON);
+        });
 
         File.WriteAllText(filePath, json.ToString());
         

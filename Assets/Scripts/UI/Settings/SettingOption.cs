@@ -20,4 +20,8 @@ public class SettingOption : MonoBehaviour
     protected virtual void OnClick() {
 
     }
+
+    public virtual void UpdateUI() {
+
+    }
 }

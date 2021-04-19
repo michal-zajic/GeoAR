@@ -6,13 +6,11 @@ using UnityEngine;
 
 public sealed class Settings {
     public enum Setting {
-        gpsDefault,
         moduleDefault,
         zoomDefault,
         useSatellite,
         showPlacementHint,
-        showMapTutorial,
-        showARTutorial
+        showOnboarding
     }
 
     public static Settings instance {
@@ -51,10 +49,6 @@ public sealed class Settings {
         }
     }
 
-    public bool IsGPSDefault() {
-        return (bool)GetValue(Setting.gpsDefault);
-    }
-
     public float GetDefaultZoom() {
         switch (GetValue(Setting.zoomDefault)) {
             case "Maximální":
@@ -71,7 +65,9 @@ public sealed class Settings {
     public string GetDescriptionFor(Setting setting) {
         switch (setting) {
             case Setting.zoomDefault:
-                return "Nastavte výchozí přiblížení mapy v rozšířené realitě. Větší přiblížení zobrazí menší oblast na stejném úseku mapy, než než menší přiblížení.";
+                return "Nastavte výchozí přiblížení mapy v rozšířené realitě. Větší přiblížení zobrazí menší oblast na stejném úseku mapy, než malé přiblížení.";
+            case Setting.moduleDefault:
+                return "Zvolte modul, který se po spuštění aplikace nastaví jako aktivní.";
             default:
                 return "";
         }
@@ -108,8 +104,6 @@ public sealed class Settings {
         //2 = float
         //3 = string
         switch (setting) {
-            case Setting.gpsDefault:
-                return 0;
             case Setting.moduleDefault:
                 return 3;
             case Setting.zoomDefault:
@@ -118,9 +112,7 @@ public sealed class Settings {
                 return 0;
             case Setting.showPlacementHint:
                 return 0;
-            case Setting.showARTutorial:
-                return 0;
-            case Setting.showMapTutorial:
+            case Setting.showOnboarding:
                 return 0;
             default:
                 return -1;
@@ -129,8 +121,6 @@ public sealed class Settings {
 
     private object GetDefaultFor(Setting setting) {
         switch(setting) {
-            case Setting.gpsDefault:
-                return false;
             case Setting.zoomDefault:
                 return "Střední";
             case Setting.moduleDefault:
@@ -139,9 +129,7 @@ public sealed class Settings {
                 return true;
             case Setting.showPlacementHint:
                 return true;
-            case Setting.showMapTutorial:
-                return true;
-            case Setting.showARTutorial:
+            case Setting.showOnboarding:
                 return true;
             default:
                 return null;

@@ -53,6 +53,7 @@ public class PollenVisualizer : ModuleMapVisualizer
             OnMapUpdated();
             _map.OnUpdated += OnMapUpdated;
         }
+        DestroyObjects();
         PollenDataLoader loader = data as PollenDataLoader;
         List<PollenInfo> infos = loader.pollenInfos;
         PollenInfo centerInfo = loader.NearestInfoTo(map.CenterLatitudeLongitude);
@@ -69,6 +70,4 @@ public class PollenVisualizer : ModuleMapVisualizer
             child.localScale = new Vector3(size, size, size);
         }
     }
-
-
 }
