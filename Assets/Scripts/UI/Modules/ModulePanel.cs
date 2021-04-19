@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//Summonable module panel object
 public class ModulePanel : MonoBehaviour
 {
     [SerializeField] GameObject _moduleEntryPrefab = null;
@@ -17,6 +18,8 @@ public class ModulePanel : MonoBehaviour
     RectTransform _rt;
     float speed = 100;
 
+    //goes through all modules and creates entries for them
+    //also initializes UI
     void Start()
     {
         _rt = GetComponent<RectTransform>();
@@ -26,6 +29,10 @@ public class ModulePanel : MonoBehaviour
             entry.Init(module.GetName(), module.GetDescription(), module.GetIcon(), ModuleClicked);            
             _entries.Add(entry);
         });
+        InitUI();
+    }
+
+    void InitUI() {
         _backButton.onClick.AddListener(() => {
             Dismiss();
         });
@@ -39,6 +46,7 @@ public class ModulePanel : MonoBehaviour
         }
     }
 
+    //called when module entry is selected
     void ModuleClicked(string name) {
         _entries.ForEach(entry => {
             if (entry.name == name) {
@@ -57,6 +65,7 @@ public class ModulePanel : MonoBehaviour
         });
     }
 
+    //coroutine which moves the module panel
     IEnumerator MovePanel(bool show) {
         float destX = show ? 0 : _rt.rect.width;
 

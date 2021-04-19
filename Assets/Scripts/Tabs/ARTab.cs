@@ -11,6 +11,7 @@ public enum LockMode {
     unlocked, locked
 }
 
+//Controller for AR tab
 public class ARTab : TabView
 {
     [SerializeField] Button _lockButton = null;
@@ -29,7 +30,7 @@ public class ARTab : TabView
     bool _mapInitialized = false;
     bool _firstLock = false;
 
-    // Start is called before the first frame update
+    //inits ui elements and map
     void Start()
     {
         _unlockButton.onClick.AddListener(() => {            
@@ -44,6 +45,7 @@ public class ARTab : TabView
         SetLockModeTo(LockMode.unlocked);
         Finder.instance.uiMgr.SetModulePanel(true);        
 
+        //this is called after mapbox initializes the map, we dont want to touch it before
         _map.OnInitialized += () => {
             _mapInitialized = true;
             _zoomSlider.value = _zoomSlider.minValue + (_zoomSlider.maxValue - _zoomSlider.minValue) * Settings.instance.GetDefaultZoom();
@@ -51,7 +53,9 @@ public class ARTab : TabView
         };
     }
 
+    //when user locks/unlocks map, UI needs to be updated
     void SetLockModeTo(LockMode mode) {
+        //if we lock the map for the first time, data needs to be downloaded
         if (!_firstLock && mode == LockMode.locked) {
             VisualizeData();
             AppState.instance.allowARConnectionAlert = true;
@@ -77,6 +81,7 @@ public class ARTab : TabView
         Finder.instance.moduleMgr.VisualizeAROnMap(_map);
     }
 
+    //updates map center coordinate if needed, also requests new data if map has already been locked at least once
     void UpdateMapCenter() {
         if (UpdateCheck()) {
             _map.SetCenterLatitudeLongitude(AppState.instance.transferLocation);
@@ -93,6 +98,9 @@ public class ARTab : TabView
         return !_map.CenterLatitudeLongitude.Equals(AppState.instance.transferLocation);
     }
 
+    //when clicking on this tab, map needs to be updated if user changed settings (satellite imagery)
+    //also it needs to check if new coordinates where chosen and update map+data in that case
+    //also AR specific UI is enabled
     protected override void OnTabSelection() {
         base.OnTabSelection();
         

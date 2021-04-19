@@ -4,6 +4,8 @@ using Mapbox.Unity.Map;
 using Mapbox.Utils;
 using UnityEngine;
 
+//Segment object used in AR traffic visualization
+//this object spawns cars in semi-random intervals
 public class SegmentObject : MonoBehaviour
 {
     [SerializeField] GameObject _carObject = null;
@@ -26,6 +28,7 @@ public class SegmentObject : MonoBehaviour
         StartCoroutine(SpawnCars());
     }
 
+    //destroys corresponding cars before destroying itself
     public void OnDestroy() {
         for(int i = _cars.Count - 1; i >= 0; i--) {
             if(_cars[i] != null)
@@ -41,6 +44,7 @@ public class SegmentObject : MonoBehaviour
         _cars.ForEach(car => { car.SetActive(active); });
     }
 
+    //coroutine which spawns new cars, if the global car limit allowes it
     IEnumerator SpawnCars() {
         while (true) {
             if (AppState.instance.carsSpawned < _carLimit) {

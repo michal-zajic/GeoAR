@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//individual module entry in module panel
 public class ModulePanelEntry : MonoBehaviour
 {
     [SerializeField] Text _titleTxt = null;

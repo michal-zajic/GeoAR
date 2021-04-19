@@ -37,6 +37,8 @@ public class TrafficMapVisualizer : ModuleMapVisualizer
         StartCoroutine(DrawLines(loader.mapSegments));
     }
 
+    //uses Unity's native Line Renderer, allowes color change through material and size change
+    //gps segment points are converted to unity space and passed to line renderer
     IEnumerator DrawLines(List<TrafficSegment> segments) {
         int i = 0;
         foreach(TrafficSegment segment in segments) {
@@ -65,6 +67,7 @@ public class TrafficMapVisualizer : ModuleMapVisualizer
         yield return null;
     }
 
+    //lines are scaled with map
     private void OnMapUpdated() {
         _featureParent.position = _map.GeoToWorldPosition(_initialLoc);
         float scale = _map.transform.localScale.x * _map.transform.parent.localScale.x;

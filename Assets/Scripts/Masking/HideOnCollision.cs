@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Component used on mask planes, which hide other objects when they collide, excluding module objects and other masking planes
 public class HideOnCollision : MonoBehaviour
 {
     List<GameObject> hiddenObjects = new List<GameObject>();

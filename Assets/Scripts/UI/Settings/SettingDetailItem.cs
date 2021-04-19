@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
+//individual option in setting picker setting
 public class SettingDetailItem : MonoBehaviour
 {
     [SerializeField] Image _checkImage = null;

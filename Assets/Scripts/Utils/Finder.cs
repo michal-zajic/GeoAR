@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//class which helps get access to some MonoBehaviour objects in scene
 public class Finder {
 
     private static Finder _instance = null;
@@ -11,6 +12,7 @@ public class Finder {
         get {
             if(_instance == null) {
                 _instance = new Finder();
+                //only one GameObject.Find call instead of call for each needed object
                 _link = GameObject.Find("FinderLink").GetComponent<FinderLink>();
             }
             return _instance;

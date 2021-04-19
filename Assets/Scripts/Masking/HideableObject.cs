@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Objects with this class are hidden if they collide with mask planes
 public class HideableObject : MonoBehaviour
 {
     [SerializeField] GameObject _objectToHide = null;
@@ -12,11 +13,13 @@ public class HideableObject : MonoBehaviour
     public bool disabled { get; private set; }
     public bool outOfBounds { get; private set; }
 
+    //external source such as ModuleVisualizer may disable these objects even if they are visible
     public void SetActive(bool active) {
         disabled = !active;
         UpdateActive();
     }
 
+    //determines the visibility of object based on disabled and outOfBounds properties
     private void UpdateActive() {
         if (disabled) {
             _renderer.enabled = false;
@@ -29,6 +32,7 @@ public class HideableObject : MonoBehaviour
         }
     }
 
+    //if this object collides with mask plane, mark it as out of bounds
     public void OnTriggerEnter(Collider other) {
         if (other.tag != "MaskPlane") {
             return;
@@ -36,6 +40,7 @@ public class HideableObject : MonoBehaviour
         outOfBounds = true;
         UpdateActive();
     }
+    //when it leaves, unmark it
     public void OnTriggerExit(Collider other) {
         if (other.tag != "MaskPlane") {
             return;

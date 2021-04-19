@@ -3,17 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//Controller for settings tab
 public class SettingsTab : TabView
 {
-    [SerializeField] Button _resetTutorialsButton = null;
     [SerializeField] Transform _settingsParent = null;
 
-    private void Start() {
-        _resetTutorialsButton.onClick.AddListener(() => {
-            Settings.instance.Set(Settings.Setting.showPlacementHint, true);
-        });
-    }
-
+    //when tab clicked, check individual settings and update them if needed
+    //also show/hide settings specific UI
     protected override void OnTabSelection() {
         base.OnTabSelection();
         Finder.instance.uiMgr.SetModulePanel(false);

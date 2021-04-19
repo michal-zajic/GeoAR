@@ -15,22 +15,25 @@ public abstract class ModuleDataLoader : MonoBehaviour {
     private int timeout = 7;
     public bool downloading { get; private set; }
 
+    //initializes properties, which are useful to many data loaders
     public virtual void Init(AbstractMap map, bool ar = false) {
         this.ar = ar;
         range = ar ? 580 : 1000;
         location = map.CenterLatitudeLongitude;
         downloading = false;
     }
-
+    //stops any loading coroutines and stops loading indicator
     public void Stop() {
         Finder.instance.uiMgr.RemoveLoader(this);
         downloading = false;
         StopAllCoroutines();
     }
 
+    //inherited loaders should implement their own data getting function and provide request
     public abstract void GetData(Action onFinish = null);
     protected abstract UnityWebRequest GetRequest();
 
+    //checks internet reachability, starts loading indicator, starts loading coroutine
     protected void LoadJSON(Action<JSONObject> onComplete = null) {
         if (downloading)
             return;
@@ -48,6 +51,8 @@ public abstract class ModuleDataLoader : MonoBehaviour {
         Stop();
     }
 
+    //wraps downloading into timer, as request.timeout doesnt seem to work properly
+    //if timeout time passes, the download is stopped and user is notificated
     IEnumerator TimeoutWrapper(Action<JSONObject> onComplete = null) {        
         StartCoroutine(LoadJSONCoroutine(onComplete));
         yield return new WaitForSecondsRealtime(timeout);
@@ -56,7 +61,10 @@ public abstract class ModuleDataLoader : MonoBehaviour {
         }
 
     }
-        
+
+    //gets request from inherited loader and sends it
+    //after completion, calls onComplete method
+    //if it fails, it notifies the user
     IEnumerator LoadJSONCoroutine(Action<JSONObject> onComplete = null) {
         UnityWebRequest request = GetRequest();
         request.timeout = timeout;

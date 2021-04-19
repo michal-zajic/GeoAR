@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//helper class, objects needed in Finder can be linked in Unity inspector to this class, so there is no need for GameObject.Find method, which is less reliable
 public class FinderLink : MonoBehaviour
 {
     public ModuleMgr moduleMgr = null;

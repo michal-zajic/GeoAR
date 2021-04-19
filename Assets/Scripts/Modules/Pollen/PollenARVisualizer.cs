@@ -19,11 +19,12 @@ public class PollenARVisualizer : ModuleARVisualizer
         });
     }
 
+    //gets data for nearest pollen source and initializes AR object
     public override void Draw(ModuleDataLoader data, AbstractMap map) {
         DestroyObjects();
         objects = new List<GameObject>();
-        PollenDataLoader loader = data as PollenDataLoader;
-        PollenInfo info = loader.NearestInfoTo(map.CenterLatitudeLongitude);
+        PollenDataLoader loader = data as PollenDataLoader;        
+        PollenInfo info = loader.NearestInfoTo(map.CenterLatitudeLongitude); 
         GameObject obj = Instantiate(_pollenARObject, map.transform);
         obj.transform.localPosition = new Vector3(0, 0, 0);
         PollenARObject arObj = obj.GetComponent<PollenARObject>();

@@ -2,6 +2,8 @@
 using UnityEngine;
 using UnityEngine.Events;
 
+//component which scales UI to safe area (iphone X bottom bar needs to be taken into consideration)
+//taken from https://forum.unity.com/threads/canvashelper-resizes-a-recttransform-to-iphone-xs-safe-area.521107/
 [RequireComponent(typeof(Canvas))]
 public class CanvasHelper : MonoBehaviour {
     private static List<CanvasHelper> helpers = new List<CanvasHelper>();

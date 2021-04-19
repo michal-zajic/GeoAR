@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
+//single page in onboarding tutorial
+//contains events for specific buttons
 public class OnboardingPage : MonoBehaviour
 {
     [SerializeField] Button _nextButton = null;

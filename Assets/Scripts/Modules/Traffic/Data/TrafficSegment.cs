@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using Mapbox.Utils;
 using UnityEngine;
 
+//Traffic data structure
 public class TrafficSegment 
 {
-    public List<Vector2d> coordinateList = new List<Vector2d>();
+    public List<Vector2d> coordinateList = new List<Vector2d>();    //segment route points
     public float speed;
     public float jamFactor;
 

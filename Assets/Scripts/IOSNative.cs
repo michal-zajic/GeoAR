@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
+//allows invoking haptic feedback on ios devices, currently not used, however it may be useful in future
 public class IOSNative 
 {
 	[DllImport("__Internal")]

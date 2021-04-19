@@ -8,6 +8,7 @@ using Mapbox.Utils;
 using UnityEngine;
 using UnityEngine.Networking;
 
+//Component loading pollen data from Ambee
 public class PollenDataLoader : ModuleDataLoader
 {
     string baseAddress = "https://api.ambeedata.com/latest/pollen/by-lat-lng?";
@@ -29,6 +30,7 @@ public class PollenDataLoader : ModuleDataLoader
     [HideInInspector]
     public List<PollenInfo> pollenInfos = new List<PollenInfo>();
 
+    //default locations (handpicked), whose pollen infos are stored on disc to optimize requests count
     List<Vector2d> startLocations = new List<Vector2d> {
         new Vector2d(50.1103664, 13.0473083),
         new Vector2d(50.4333703, 14.2338317),
@@ -43,19 +45,22 @@ public class PollenDataLoader : ModuleDataLoader
     };
 
     int startLocationsCounter = 0;
-    bool initialized = false;
     bool firstTime = true;
     Action onDefaultLoadedAction;
     Vector2d tmpLocation = Vector2d.zero;
 
     bool defaultsLoaded = false;
 
+    //inits loader and tries to load data from disc if available
     public override void Init(AbstractMap map, bool ar = false) {
         base.Init(map, ar);
         if(!defaultsLoaded)
             defaultsLoaded = LoadDataFromDisc();       
     }
 
+    //if there were no data stored on disc, loader needs to download data for default locations in startLocations
+    //after downloading, it needs to save them to disc
+    //otherwise it checks, if there is nearby stored location, if not, it downloads new data
     public override void GetData(Action onFinish = null) {
         if (firstTime && !defaultsLoaded) {
             tmpLocation = location;
@@ -76,6 +81,7 @@ public class PollenDataLoader : ModuleDataLoader
         }        
     }
 
+    //returns nearest pollen info source to requested location
     public PollenInfo NearestInfoTo(Vector2d location) {
         double dist = double.PositiveInfinity;
         PollenInfo nearestInfo = pollenInfos[0];
@@ -99,6 +105,9 @@ public class PollenDataLoader : ModuleDataLoader
         return request;
     }
 
+    //after the data are downloaded, they are processed and stored to data list
+    //if we are in phase of downloading default locations, new downloads are recursively called, until all startLocations are downloaded
+    //afterwards, the requested location is also downloaded and processed
     void RequestComplete(JSONObject json, Action onFinish) {             
         ProcessJSON(json, location);
 
@@ -129,6 +138,7 @@ public class PollenDataLoader : ModuleDataLoader
             onFinish();
     }
 
+    //processes json and stores to data list
     void ProcessJSON(JSONObject json, Vector2d coordinates) {
         if(json.GetField("message").str != "Success")
             return;
@@ -149,6 +159,7 @@ public class PollenDataLoader : ModuleDataLoader
         pollenInfos.Add(pollenInfo);
     }
 
+    //checks if there is any location near requested
     bool IsLocationNearExisting(Vector2d location) {
         var locations = pollenInfos.Select(info => { return info.coordinates; });
 
@@ -162,6 +173,9 @@ public class PollenDataLoader : ModuleDataLoader
         return false;
     }
 
+    //loads data from disc
+    //returns false if there are no data stored or if they are 5 or more days old
+    //returns true otherwise
     bool LoadDataFromDisc() {
         if (!File.Exists(filePath))
             return false;
@@ -190,16 +204,9 @@ public class PollenDataLoader : ModuleDataLoader
 
         return true;
     }    
-
+        
     void SaveDataToDisc() {
         JSONObject json = new JSONObject();
-        /*if(!File.Exists(filePath)) {
-            json = new JSONObject();
-        } else {
-            var text = File.ReadAllText(filePath);
-            json = new JSONObject(text);
-        }*/
-
         
         pollenInfos.ForEach(info => {
             JSONObject infoJSON = new JSONObject();
