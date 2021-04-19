@@ -28,7 +28,8 @@ public class SegmentObject : MonoBehaviour
 
     public void OnDestroy() {
         for(int i = _cars.Count - 1; i >= 0; i--) {
-            Destroy(_cars[i].gameObject);
+            if(_cars[i] != null)
+                Destroy(_cars[i].gameObject);
         }
     }
 

@@ -12,6 +12,11 @@ public class SettingPicker : SettingOption
     protected override void Start()
     {
         base.Start();
+        UpdateUI();
+    }
+
+    public override void UpdateUI() {
+        base.UpdateUI();
         _choiceText.text = (string)Settings.instance.GetValue(setting);
     }
 

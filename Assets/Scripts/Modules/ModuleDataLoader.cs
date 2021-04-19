@@ -58,7 +58,6 @@ public abstract class ModuleDataLoader : MonoBehaviour {
     }
         
     IEnumerator LoadJSONCoroutine(Action<JSONObject> onComplete = null) {
-        print("START");
         UnityWebRequest request = GetRequest();
         request.timeout = timeout;
         request.downloadHandler = new DownloadHandlerBuffer();

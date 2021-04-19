@@ -33,8 +33,10 @@ public class TrafficDataLoader : ModuleDataLoader {
     void ProcessJSON(JSONObject json, Action onFinish = null) {
         if (ar)
             arSegments = new List<TrafficSegment>();
+        else
+            mapSegments = new List<TrafficSegment>();
         if (json.IsNull)
-            return;
+            return;        
         JSONObject flowArray = json["RWS"][0]["RW"];
         foreach(JSONObject rw in flowArray.list) {
             JSONObject segmentArray = rw["FIS"][0]["FI"];

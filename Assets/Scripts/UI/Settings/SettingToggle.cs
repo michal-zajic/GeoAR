@@ -23,18 +23,23 @@ public class SettingToggle : SettingOption
     protected override void Start()
     {
         base.Start();
-        var on = Settings.instance.GetValue(setting);
-        if (on != null) {
-            isOn = (bool)on;
-        } else {
-            isOn = false;
-        }
+        UpdateUI();
     }
 
     void UpdateToggle() {
         _imageOn.gameObject.SetActive(isOn);
         _imageOff.gameObject.SetActive(!isOn);
         Settings.instance.Set(setting, isOn);
+    }
+
+    public override void UpdateUI() {
+        base.UpdateUI();
+        var on = Settings.instance.GetValue(setting);
+        if (on != null) {
+            isOn = (bool)on;
+        } else {
+            isOn = false;
+        }
     }
 
     protected override void OnClick() {

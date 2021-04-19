@@ -57,6 +57,8 @@ public class RecycleDataLoader : ModuleDataLoader
 
                 container.trashTypes = new List<Container.TrashType>();
                 JSONObject bins = properties["containers"];
+                if (bins == null)
+                    continue;
                 foreach(JSONObject bin in bins.list) {
                     container.trashTypes.Add((Container.TrashType)bin["trash_type"]["id"].i);
                 }

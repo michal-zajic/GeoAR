@@ -90,7 +90,7 @@ public class ARTab : TabView
     }
 
     bool UpdateCheck() {
-        return _map.CenterLatitudeLongitude != AppState.instance.transferLocation;
+        return !_map.CenterLatitudeLongitude.Equals(AppState.instance.transferLocation);
     }
 
     protected override void OnTabSelection() {

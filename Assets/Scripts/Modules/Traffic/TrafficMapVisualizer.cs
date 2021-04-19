@@ -30,7 +30,7 @@ public class TrafficMapVisualizer : ModuleMapVisualizer
             _initialLoc = _map.WorldToGeoPosition(_featureParent.position);
             OnMapUpdated();
             _map.OnUpdated += OnMapUpdated;
-        }
+        }        
         TrafficDataLoader loader = data as TrafficDataLoader;
         StopAllCoroutines();
         DestroyObjects();

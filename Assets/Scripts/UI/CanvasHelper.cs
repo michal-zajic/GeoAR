@@ -39,7 +39,7 @@ public class CanvasHelper : MonoBehaviour {
     }
 
     void Update() {
-        if (helpers[0] != this)
+        if (helpers != null && helpers.Count > 0 && helpers[0] != this)
             return;
 
         if (Application.isMobilePlatform && Screen.orientation != lastOrientation)

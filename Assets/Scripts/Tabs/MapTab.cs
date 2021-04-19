@@ -26,9 +26,9 @@ public class MapTab : TabView {
 
     void Start()
     {
-        _marker.gameObject.SetActive(false);       
+        _marker.gameObject.SetActive(false);
 
-        SendTransferLocationToState(_map.CenterLatitudeLongitude);
+        TransferMapCenterToAR();
         InitButtons();       
     }
 
@@ -42,8 +42,7 @@ public class MapTab : TabView {
             Finder.instance.uiMgr.ShowOnboarding(true);
         });
         _transferButton.onClick.AddListener(() => {
-            _currentARPosition = _map.CenterLatitudeLongitude;
-            AppState.instance.UpdateTransferLocation(_currentARPosition);
+            TransferMapCenterToAR();
         });
     }
 
@@ -64,7 +63,12 @@ public class MapTab : TabView {
     }
 
     void SendTransferLocationToState(Vector2d location) {
+        _currentARPosition = location;
         AppState.instance.UpdateTransferLocation(location);
+    }
+
+    void TransferMapCenterToAR() {
+        SendTransferLocationToState(_map.CenterLatitudeLongitude);
     }
 
     void UpdateUpdateButton() {
@@ -120,7 +124,9 @@ public class MapTab : TabView {
     }
 
     void UpdateTransferButton() {
-        _transferButton.gameObject.SetActive(!_currentARPosition.Equals(_map.CenterLatitudeLongitude));
+        Vector2d first = _currentARPosition;
+        Vector2d second = _map.CenterLatitudeLongitude;
+        _transferButton.gameObject.SetActive(Tools.GetDistanceBetweenPoints(first.x, first.y, second.x, second.y) > 200);
     }
 
     void UpdateUI() {
