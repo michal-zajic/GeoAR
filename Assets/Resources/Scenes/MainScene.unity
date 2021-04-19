@@ -1189,7 +1189,7 @@ GameObject:
   - component: {fileID: 217500041}
   - component: {fileID: 217500044}
   m_Layer: 5
-  m_Name: Background
+  m_Name: SettingsList
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1458,7 +1458,7 @@ GameObject:
   - component: {fileID: 229883959}
   - component: {fileID: 229883960}
   m_Layer: 5
-  m_Name: UI
+  m_Name: UIMgr
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3254,7 +3254,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _camera: {fileID: 209750027}
   _objectToHide: {fileID: 524513515}
-  _resetTutorialsButton: {fileID: 7229944028627447922}
   _settingsParent: {fileID: 217500040}
 --- !u!1 &557371051
 GameObject:
@@ -9166,7 +9165,7 @@ GameObject:
   - component: {fileID: 114844694732598821}
   - component: {fileID: 1731568220768590}
   m_Layer: 0
-  m_Name: ARTabletopKit
+  m_Name: ARContent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9248,7 +9247,7 @@ GameObject:
   - component: {fileID: 114201824480510385}
   - component: {fileID: 1812107946239054}
   m_Layer: 0
-  m_Name: AR Root
+  m_Name: AR Camera Parent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
