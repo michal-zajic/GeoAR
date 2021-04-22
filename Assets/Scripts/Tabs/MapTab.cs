@@ -56,6 +56,10 @@ public class MapTab : TabView {
         _map.ImageLayer.SetProperties(type, true, false, true);
         Finder.instance.uiMgr.SetModulePanel(true);
         Finder.instance.uiMgr.SetLoadingImage(true);
+
+        if(Finder.instance.moduleMgr.activeModule != null) {
+            Finder.instance.moduleMgr.activeModule.mapVisualizer.Enable();
+        }
     }
 
     void CenterOnUserLocation() {

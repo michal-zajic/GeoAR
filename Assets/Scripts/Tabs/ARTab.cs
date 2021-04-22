@@ -113,5 +113,8 @@ public class ARTab : TabView
         if (_mapInitialized) {
             UpdateMapCenter();
         }
+
+        if(Finder.instance.moduleMgr.activeModule != null)
+            Finder.instance.moduleMgr.activeModule.mapVisualizer.Disable();
     }
 }

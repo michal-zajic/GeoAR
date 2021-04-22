@@ -1456,9 +1456,8 @@ GameObject:
   - component: {fileID: 229883956}
   - component: {fileID: 229883955}
   - component: {fileID: 229883959}
-  - component: {fileID: 229883960}
   m_Layer: 5
-  m_Name: UIMgr
+  m_Name: UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1563,18 +1562,6 @@ MonoBehaviour:
   _loadingImage: {fileID: 1683151352}
   _onboardingUI: {fileID: 307438747}
   _onboardingUIModified: {fileID: 1295367714}
---- !u!114 &229883960
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 229883954}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab5bef6edff4d41aba208fcd74f9c699, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!21 &257895087
 Material:
   serializedVersion: 6
