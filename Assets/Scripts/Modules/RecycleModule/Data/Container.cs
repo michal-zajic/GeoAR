@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Mapbox.Utils;
 using UnityEngine;
 
+//Data structure for recycle containers
 public class Container {
     public enum TrashType {
         tintedGlass = 1,

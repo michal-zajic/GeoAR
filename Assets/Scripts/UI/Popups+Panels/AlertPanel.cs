@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//obsolete alert, will be probably removed in next version
 public class AlertPanel : MonoBehaviour
 {
     [SerializeField] Text _descriptionCenterText = null;

@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Pollen object used for AR visualization
 public class PollenARObject : MonoBehaviour
 {
+    //particle system for each pollen category
     [SerializeField] ParticleSystem _grassPS = null;
     [SerializeField] ParticleSystem _treePS = null;
     [SerializeField] ParticleSystem _weedPS = null;
@@ -14,6 +16,8 @@ public class PollenARObject : MonoBehaviour
         SetupPS(_weedPS, weedCount);
     }
 
+    //setups all important particle system parameters, most important is max particles, which limits the number of
+    //active particles by pollen particle count
     void SetupPS(ParticleSystem ps, int count) {
         ps.gameObject.SetActive(false);
         var emission = ps.emission;

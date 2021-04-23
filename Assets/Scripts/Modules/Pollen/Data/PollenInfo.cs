@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Mapbox.Utils;
 using UnityEngine;
 
+//Pollen data structure
 public class PollenInfo
 {
     public enum Danger {
@@ -10,10 +11,10 @@ public class PollenInfo
     }
 
     public Vector2d coordinates;
-    public int grassCount;
+    public int grassCount;          //pollen particles per m^3
     public int treeCount;
     public int weedCount;
-    public Danger grassDanger;
+    public Danger grassDanger;      //pollen danger calculated by Ambee
     public Danger treeDanger;
     public Danger weedDanger;
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//allows to pick setting from selection of options
 public class SettingPicker : SettingOption
 {
     [SerializeField] GameObject _detailScreenPrefab = null;

@@ -5,22 +5,23 @@ using Mapbox.Unity.Map;
 using Mapbox.Utils;
 using UnityEngine;
 
+//Singleton managing all modules behaviour
 public class ModuleMgr : MonoBehaviour
 {    
-    public List<GameObject> modulesObjects;
+    public List<GameObject> modulesObjects; //module prefabs are added through unity inspector
 
     [HideInInspector]
-    public List<Module> modules { get; private set; }
+    public List<Module> modules { get; private set; } //list of Module only
 
     [HideInInspector]
     public Module activeModule = null;
 
-    private Vector2d lastCoord = Vector2d.zero;
+    private Vector2d lastCoord = Vector2d.zero; //used to check whether data should be reloaded or just enabled
     private Vector2d lastCoordAR = Vector2d.zero;
     private AbstractMap map = null;
     private AbstractMap arMap = null;
 
-    // Start is called before the first frame update
+    //Processes given module prefabs and sets default module from settings
     void Start()
     {
         modules = new List<Module>();
@@ -42,6 +43,7 @@ public class ModuleMgr : MonoBehaviour
         });        
     }
 
+    //disables current module, activates new one
     public void SetActiveModule(string moduleName) {
         if(activeModule != null) {
             activeModule.arVisualizer.Disable();
@@ -64,12 +66,13 @@ public class ModuleMgr : MonoBehaviour
         Finder.instance.uiMgr.UpdateHelpButton();
     }
 
+    //called from 2D map, forces new update
     public void VisualizeOnMap(AbstractMap map) {
         this.map = map;
         lastCoord = map.CenterLatitudeLongitude;
         UpdateAndDrawData(false);
     }
-
+    //called from AR map, forces new update
     public void VisualizeAROnMap(AbstractMap map) {
         arMap = map;
         lastCoordAR = map.CenterLatitudeLongitude;
@@ -108,6 +111,7 @@ public class ModuleMgr : MonoBehaviour
 
             activeModule.dataLoader.Init(currentMap, ar);
             activeModule.dataLoader.GetData(() => {
+                //draw after loading finishes
                 vis.Draw(activeModule.dataLoader, currentMap);
                 if(onFinish != null)
                     onFinish();

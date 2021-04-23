@@ -4,6 +4,7 @@ using Mapbox.Unity.Map;
 using Mapbox.Utils;
 using UnityEngine;
 
+//Visualizer for pollen on 2D map
 public class PollenVisualizer : ModuleMapVisualizer
 {
     [SerializeField] Transform _featureParent = null;
@@ -26,7 +27,7 @@ public class PollenVisualizer : ModuleMapVisualizer
             obj.SetActive(true);
         });
     }
-
+        
     IEnumerator DrawCoroutine(List<PollenInfo> pollenInfos) {
         int i = 1;
         foreach (PollenInfo info in pollenInfos) {
@@ -61,6 +62,7 @@ public class PollenVisualizer : ModuleMapVisualizer
         StartCoroutine(DrawCoroutine(loader.pollenInfos));
     }
 
+    //pollen sprites are placed under featureParent - transform, which scales with map, the sprites are scaled too so they remain constant size unlike recycle objects
     private void OnMapUpdated() {
         _featureParent.position = _map.GeoToWorldPosition(_initialLoc);
         float scale = _map.transform.localScale.x;

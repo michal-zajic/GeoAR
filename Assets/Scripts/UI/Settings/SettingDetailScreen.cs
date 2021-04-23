@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
+//screen containing individual setting picker options
 public class SettingDetailScreen : MonoBehaviour
 {
     [SerializeField] Text _headlineText = null;

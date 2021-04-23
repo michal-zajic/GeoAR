@@ -479,7 +479,7 @@ RectTransform:
   m_Father: {fileID: 333496616}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.334, y: 0}
+  m_AnchorMin: {x: 0.334, y: 0.12}
   m_AnchorMax: {x: 0.667, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
@@ -1189,7 +1189,7 @@ GameObject:
   - component: {fileID: 217500041}
   - component: {fileID: 217500044}
   m_Layer: 5
-  m_Name: Background
+  m_Name: SettingsList
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1456,7 +1456,6 @@ GameObject:
   - component: {fileID: 229883956}
   - component: {fileID: 229883955}
   - component: {fileID: 229883959}
-  - component: {fileID: 229883960}
   m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
@@ -1563,18 +1562,6 @@ MonoBehaviour:
   _loadingImage: {fileID: 1683151352}
   _onboardingUI: {fileID: 307438747}
   _onboardingUIModified: {fileID: 1295367714}
---- !u!114 &229883960
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 229883954}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab5bef6edff4d41aba208fcd74f9c699, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!21 &257895087
 Material:
   serializedVersion: 6
@@ -2155,7 +2142,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0.1}
+  m_AnchorMax: {x: 1, y: 0.11}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -3254,7 +3241,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _camera: {fileID: 209750027}
   _objectToHide: {fileID: 524513515}
-  _resetTutorialsButton: {fileID: 7229944028627447922}
   _settingsParent: {fileID: 217500040}
 --- !u!1 &557371051
 GameObject:
@@ -3585,7 +3571,7 @@ RectTransform:
   m_Father: {fileID: 333496616}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 0.12}
   m_AnchorMax: {x: 0.334, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
@@ -5477,7 +5463,7 @@ RectTransform:
   m_Father: {fileID: 333496616}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.667, y: 0}
+  m_AnchorMin: {x: 0.667, y: 0.12}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
@@ -9166,7 +9152,7 @@ GameObject:
   - component: {fileID: 114844694732598821}
   - component: {fileID: 1731568220768590}
   m_Layer: 0
-  m_Name: ARTabletopKit
+  m_Name: ARContent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9248,7 +9234,7 @@ GameObject:
   - component: {fileID: 114201824480510385}
   - component: {fileID: 1812107946239054}
   m_Layer: 0
-  m_Name: AR Root
+  m_Name: AR Camera Parent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

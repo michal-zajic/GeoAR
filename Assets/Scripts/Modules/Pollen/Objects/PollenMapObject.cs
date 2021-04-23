@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Pollen object used for 2D map visualization
 public class PollenMapObject : MonoBehaviour
 {
     [SerializeField] GameObject grassObj = null;

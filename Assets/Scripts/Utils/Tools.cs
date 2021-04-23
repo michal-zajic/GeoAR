@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//class with useful static methods which may be needed across whole app
 public class Tools 
 {
+    //gets distance in meters between two GPS coordinates
     //taken from http://www.consultsarath.com/contents/articles/KB000012-distance-between-two-points-on-globe--calculation-using-cSharp.aspx
     public static double GetDistanceBetweenPoints(double lat1, double long1, double lat2, double long2) {
         double distance = 0;

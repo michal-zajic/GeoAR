@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+//This component adjusts render queue so these objects will not appear behind mask planes
 public class Mask3DReceiver : MonoBehaviour {
 
 	protected void Awake() {

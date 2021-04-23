@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//manages onboarding UI
 public class OnboardingUI : MonoBehaviour
 {
     [SerializeField] List<GameObject> pages = null;
 
     int _currentPage = 0;
 
+    //shows onboarding from the first page
     public void Show() {
         _currentPage = 0;
         if(pages != null && pages.Count > 0) {
@@ -15,6 +17,8 @@ public class OnboardingUI : MonoBehaviour
         }
     }
 
+    //instantiates next page in order
+    //initializes buttons - next button shows next page, ok button exits and not again button exits and disables onboarding during next app launch
     void ShowCurrentPage() {
         if (_currentPage >= pages.Count)
             return;

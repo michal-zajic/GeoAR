@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//single tab bar button, when clicked, activates corresponding Tab View
 [RequireComponent(typeof(Button))]
 public class TabBarButton : MonoBehaviour {
     Color _activeColor {

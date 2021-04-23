@@ -20,6 +20,7 @@ public class RecycleARVisualizer : ModuleARVisualizer
         });
     }
 
+    //gets data and spawns container objects on given coordinates
     public override void Draw(ModuleDataLoader data, AbstractMap map) {
         DestroyObjects();
         objects = new List<GameObject>();

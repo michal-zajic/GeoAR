@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+//Controller for map tab
 public class MapTab : TabView {
     [SerializeField] AbstractMap _map = null;
     [SerializeField] DeviceLocationProvider _locationProvider = null;
@@ -20,7 +21,7 @@ public class MapTab : TabView {
 
     bool _firstUpdate = false;
 
-    Vector2d _corner1 = new Vector2d(48.5476636, 11.6568511);
+    Vector2d _corner1 = new Vector2d(48.5476636, 11.6568511);   //handpicked corner locations of bounding box encapsulating Czech Republic
     Vector2d _corner2 = new Vector2d(51.2190594, 19.0396636);
     Vector2d _currentARPosition = Vector2d.zero;
 
@@ -46,6 +47,8 @@ public class MapTab : TabView {
         });
     }
 
+    //when clicking on this tab, map needs to be updated if user changed settings (satellite imagery)
+    //also map specific UI is enabled
     protected override void OnTabSelection() {
         base.OnTabSelection();
 
@@ -53,6 +56,10 @@ public class MapTab : TabView {
         _map.ImageLayer.SetProperties(type, true, false, true);
         Finder.instance.uiMgr.SetModulePanel(true);
         Finder.instance.uiMgr.SetLoadingImage(true);
+
+        if(Finder.instance.moduleMgr.activeModule != null) {
+            Finder.instance.moduleMgr.activeModule.mapVisualizer.Enable();
+        }
     }
 
     void CenterOnUserLocation() {
@@ -71,6 +78,7 @@ public class MapTab : TabView {
         SendTransferLocationToState(_map.CenterLatitudeLongitude);
     }
 
+    //update button is interactable based on chosen module and map zoom
     void UpdateUpdateButton() {
         if (Finder.instance.moduleMgr.activeModule == null) {
             _updateButton.interactable = false;
@@ -83,16 +91,13 @@ public class MapTab : TabView {
         _locationButton.gameObject.SetActive(_locationProvider.CurrentLocation.IsLocationServiceEnabled);
     }
 
-    Vector2d ScreenToGeoPoint(Vector2 screenPos) {
-        Vector3 position = camera.ScreenToWorldPoint(screenPos);
-        return _map.WorldToGeoPosition(position);
-    }
-
     Vector2 GeoToScreenPoint(Vector2d latlon) {
         Vector3 position = _map.GeoToWorldPosition(latlon);
         return camera.WorldToScreenPoint(position);        
     }
 
+    //enables user location button based on gps availability
+    //when getting gps for the first time, it also centers map on user location
     void UpdateUserLocationIcon(Location location) {
         if (!location.IsLocationServiceEnabled || location.IsLocationServiceInitializing) {
             _userLocationImage.gameObject.SetActive(false);
@@ -110,9 +115,8 @@ public class MapTab : TabView {
         Vector2 screenPos = GeoToScreenPoint(latlon);
         _userLocationImage.rectTransform.position = screenPos;
 
-
     }
-
+    //shows zoom instruction when map zoom is lesser than module's minimal zoom
     void UpdateZoomAlert() {
         if(Finder.instance.moduleMgr.activeModule != null) {
             if(_map.Zoom < Finder.instance.moduleMgr.activeModule.GetMinZoom()) {
@@ -122,7 +126,7 @@ public class MapTab : TabView {
         }
         _zoomAlert.SetActive(false);
     }
-
+    //shows transfer button when map is further than 200m from last transfered position
     void UpdateTransferButton() {
         Vector2d first = _currentARPosition;
         Vector2d second = _map.CenterLatitudeLongitude;

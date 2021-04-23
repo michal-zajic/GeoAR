@@ -26,6 +26,6 @@ public class PollenModule : Module
     }
 
     public override float GetMinZoom() {
-        return 0;
+        return 0; //we can request data anywhere with any map zoom
     }
 }

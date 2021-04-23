@@ -36,6 +36,7 @@ public class RecycleDataLoader : ModuleDataLoader
         return request;
     }
 
+    //filters important data from json, constructs data object and adds it to corresponding list
     void ProcessJSON(JSONObject json, Action onFinish = null) {
         if (ar)
             arContainers = new List<Container>();

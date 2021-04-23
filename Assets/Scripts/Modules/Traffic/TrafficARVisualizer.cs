@@ -20,6 +20,7 @@ public class TrafficARVisualizer : ModuleARVisualizer {
         });
     }
 
+    //spawns segment object for each segment and gives it relevant data
     public override void Draw(ModuleDataLoader data, AbstractMap map) {
         DestroyObjects();
         TrafficDataLoader loader = data as TrafficDataLoader;

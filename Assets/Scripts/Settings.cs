@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
+//main class managing persisting app settings
 public sealed class Settings {
+    //enum containing all available settings
     public enum Setting {
         moduleDefault,
         zoomDefault,
         useSatellite,
-        showPlacementHint,
         showOnboarding
     }
 
@@ -27,13 +28,14 @@ public sealed class Settings {
         Load();
     }
 
-    Dictionary<Setting, object> _dict;
+    Dictionary<Setting, object> _dict; //settings dictionary values are stored as object during runtime
     string path {
         get {
             return Application.persistentDataPath + "/settings.json";
         }
     }
 
+    //if there is a picker setting (picks one option from many), here are defined the options for each setting
     public List<string> GetItemsFor(Setting setting) {
         switch (setting) {
             case Setting.zoomDefault:
@@ -49,6 +51,7 @@ public sealed class Settings {
         }
     }
 
+    //helper method, which converts string zoom option to usable float number
     public float GetDefaultZoom() {
         switch (GetValue(Setting.zoomDefault)) {
             case "Maximální":
@@ -62,6 +65,7 @@ public sealed class Settings {
         }
     }
 
+    //if there is a picker setting, description, which appears above the options, can be set here. It is optional though and can be empty
     public string GetDescriptionFor(Setting setting) {
         switch (setting) {
             case Setting.zoomDefault:
@@ -73,11 +77,13 @@ public sealed class Settings {
         }
     }
 
+    //adds new setting to dictionary
     public void Add(Setting key, object value) {
         _dict.Add(key, value);
         Save();
     }
 
+    //retrieves setting from dictionary if present
     public object GetValue(Setting key) {
         if (_dict != null && _dict.ContainsKey(key)) {
             return _dict[key];
@@ -86,6 +92,7 @@ public sealed class Settings {
         }
     }
 
+    //overwrites setting, if there is none, it is added instead
     public void Set(Setting key, object value) {
         if (_dict == null) {
             SetDefaults();
@@ -98,6 +105,7 @@ public sealed class Settings {
         }
     }
 
+    //returns data type for each setting, so it can be properly retrieved from json
     private int GetTypeFor(Setting setting) {
         //0 = bool
         //1 = int
@@ -110,8 +118,6 @@ public sealed class Settings {
                 return 3;
             case Setting.useSatellite:
                 return 0;
-            case Setting.showPlacementHint:
-                return 0;
             case Setting.showOnboarding:
                 return 0;
             default:
@@ -119,6 +125,7 @@ public sealed class Settings {
         }
     }
 
+    //gets default values for settings
     private object GetDefaultFor(Setting setting) {
         switch(setting) {
             case Setting.zoomDefault:
@@ -127,8 +134,6 @@ public sealed class Settings {
                 return "Žádný";
             case Setting.useSatellite:
                 return true;
-            case Setting.showPlacementHint:
-                return true;
             case Setting.showOnboarding:
                 return true;
             default:
@@ -136,6 +141,7 @@ public sealed class Settings {
         }
     }
 
+    //if there are no settings yet, creates them and sets defaults
     private void SetDefaults() {
         _dict = new Dictionary<Setting, object>();
 
@@ -146,6 +152,7 @@ public sealed class Settings {
         Save();
     }
 
+    //loads settings from json on disc
     private void Load() {
         if (!File.Exists(path)) {
             SetDefaults();
@@ -159,6 +166,9 @@ public sealed class Settings {
         JSONObject json = new JSONObject(text);
         _dict = new Dictionary<Setting, object>();
 
+        //for each setting, check if it is stored in json
+        // if yes, load it and save to dictionary
+        // if no, add it to dictionary with its default value based on data type
         foreach (Setting setting in Enum.GetValues(typeof(Setting))) {
             if (json.HasField(setting.ToString())) {
                 //0 = bool
@@ -193,6 +203,7 @@ public sealed class Settings {
         }
     }
 
+    //saves setttings to json based on data type
     private void Save() {
         JSONObject json = new JSONObject();
         foreach (KeyValuePair<Setting, object> pair in _dict) {

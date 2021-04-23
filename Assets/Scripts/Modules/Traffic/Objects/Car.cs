@@ -4,6 +4,7 @@ using Mapbox.Unity.Map;
 using Mapbox.Utils;
 using UnityEngine;
 
+//Car object used in AR traffic visualization
 public class Car : HideableObject
 {
     public delegate void onDestroyDelegate();
@@ -17,6 +18,7 @@ public class Car : HideableObject
 
     float _carSize = 0.0036f;
 
+    //sets color, position and size
     public void Init(List<Vector2d> segmentPoints, AbstractMap map, float speed, float jamFactor) {
         _segmentPoints = segmentPoints;
         _map = map;
@@ -30,11 +32,12 @@ public class Car : HideableObject
 
     void Update()
     {
+        //end of route reached, destroy the car
         if(_nextPoint >= _segmentPoints.Count) {
             Destroy(gameObject);
             return;
         }
-
+        //otherwise move towards next segment point
         Vector3 targetPos = _map.GeoToWorldPosition(_segmentPoints[_nextPoint]);
         transform.LookAt(targetPos);
         Vector3 direction = (targetPos - transform.position).normalized;
@@ -46,6 +49,8 @@ public class Car : HideableObject
         }
     }
 
+    //the car needs to be removed from list in SegmentObject, so the car lets it know, that it is about to be destroyed
+    //also the global car amout is decreased
     private void OnDestroy() {
         AppState.instance.carsSpawned -= 1;
         if(onDestroy != null)

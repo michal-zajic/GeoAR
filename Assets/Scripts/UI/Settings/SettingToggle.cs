@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//setting which allowes user to toggle some option
 public class SettingToggle : SettingOption
 {
     [SerializeField] Image _imageOn = null;

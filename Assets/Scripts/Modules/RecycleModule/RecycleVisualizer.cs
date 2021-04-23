@@ -5,6 +5,7 @@ using Mapbox.Unity.Map;
 using Mapbox.Utils;
 using UnityEngine;
 
+//Visualizer for recycle module on 2D map
 public class RecycleVisualizer : ModuleMapVisualizer
 {
     [SerializeField] Transform _featureParent = null;
@@ -26,6 +27,7 @@ public class RecycleVisualizer : ModuleMapVisualizer
         });
     }
 
+    //instantiates recycle map objects on its coordinates
     IEnumerator DrawCoroutine(List<Container> containers) {
         DestroyObjects();
         int i = 1;
@@ -60,6 +62,7 @@ public class RecycleVisualizer : ModuleMapVisualizer
         StartCoroutine(DrawCoroutine(loader.containers));
     }
 
+    //similar to pollen visualizer, feature parent is scaled based on map, children here are not scaled back, so they get bigger with map zoom
     private void OnMapUpdated() {
         _featureParent.position = _map.GeoToWorldPosition(_initialLoc);
         float scale = _map.transform.localScale.x * _map.transform.parent.localScale.x;

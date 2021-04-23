@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//single tab - parent class to AR, Map and Settings tab
 public class TabView : MonoBehaviour
 {
     [SerializeField] Camera _camera = null;
@@ -10,6 +11,7 @@ public class TabView : MonoBehaviour
 
     protected Camera camera => _camera;    
 
+    //some tabs use different cameras, which need to be set active
     public void SetActive(bool active) {
         if (active)
             ActivateCamera();

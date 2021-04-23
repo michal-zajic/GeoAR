@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//Component which creates pie chart from given color array
 public class PieChart : MonoBehaviour
 {
     [SerializeField] Sprite circle = null;
     [SerializeField] Image _background = null;
 
     public void Init(List<Color> colors, Color background, bool drawBackground = false) {
+        //on 2D map, we want color outline based on accessibility
         if (drawBackground) {        
             _background.color = background;
             _background.color -= new Color32(0, 0, 0, 50);
@@ -23,14 +25,15 @@ public class PieChart : MonoBehaviour
             im.color = colors[i];
             im.type = Image.Type.Filled;
             im.fillOrigin = (int)Image.OriginVertical.Top;
-            im.fillAmount = 1.0f / colors.Count;
+            im.fillAmount = 1.0f / colors.Count;  //determines the sector of circle image
             im.color -= new Color32(0,0,0, 50);
 
-            float rotation = (i + 1) * (360.0f / colors.Count);
+            float rotation = (i + 1) * (360.0f / colors.Count); //rotates the sector so the colors go in order
             pieceObj.transform.Rotate(Vector3.forward, rotation);
         }
     }
 
+    //helper functions to anchor UI
     void SetRectTransform(GameObject obj, float offset) {
         RectTransform rt = obj.GetComponent<RectTransform>();
         rt.offsetMin = new Vector2(offset, offset);

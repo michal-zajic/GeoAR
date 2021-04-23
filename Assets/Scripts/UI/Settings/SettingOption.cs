@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//main setting option class - other options inherit this class
 public class SettingOption : MonoBehaviour
 {
     [SerializeField] Button _button = null;

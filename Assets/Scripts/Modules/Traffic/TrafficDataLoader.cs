@@ -30,6 +30,7 @@ public class TrafficDataLoader : ModuleDataLoader {
         return new UnityWebRequest(url);        
     }
 
+    //pretty complicate processing as there are a lot of single-element lists
     void ProcessJSON(JSONObject json, Action onFinish = null) {
         if (ar)
             arSegments = new List<TrafficSegment>();
@@ -43,8 +44,10 @@ public class TrafficDataLoader : ModuleDataLoader {
             foreach(JSONObject segmentJSON in segmentArray.list) {
                 TrafficSegment segment = new TrafficSegment();                
                 JSONObject info = segmentJSON["CF"][0];
-                //IF LOW JAM, SKIP
                 segment.jamFactor = info["JF"].f;
+
+                //during implementation and testing, there were some situations, where SU parameter wasnt available, but SP was
+                //SP takes SU values, but limits them to maximum legal speed in this segment as oppose to SU, which allowes higher speeds
                 if (info.HasField("SU")) {
                     segment.speed = info["SU"].f;
                 } else if (info.HasField("SP")) {
@@ -53,6 +56,7 @@ public class TrafficDataLoader : ModuleDataLoader {
                     continue;
                 }
 
+                //processes segment shape, for some reason, sometimes it is divided into many smaller segments, which are connected anyway
                 JSONObject shape = segmentJSON["SHP"];
                 foreach(JSONObject shp in shape.list) {
                     string segments = shp["value"][0].str;
@@ -67,7 +71,7 @@ public class TrafficDataLoader : ModuleDataLoader {
                         }
                     }
                 }
-
+                                
                 if (!CheckIfSegmentCrossesMap(segment.coordinateList)) {
                     continue;
                 }
