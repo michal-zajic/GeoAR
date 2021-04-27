@@ -2919,7 +2919,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Settings
+  m_Text: "Nastaven\xED"
 --- !u!222 &483689714
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8654,7 +8654,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Map
+  m_Text: Mapa
 --- !u!222 &1865017449
 CanvasRenderer:
   m_ObjectHideFlags: 0
