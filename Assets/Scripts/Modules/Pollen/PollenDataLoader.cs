@@ -146,7 +146,7 @@ public class PollenDataLoader : ModuleDataLoader
 
     //processes json and stores to data list
     void ProcessJSON(JSONObject json, Vector2d coordinates) {
-        if(json.GetField("message").str != "Success")
+        if(json.GetField("message").str.ToLower() != "success")
             return;
 
         JSONObject info = json["data"][0];
