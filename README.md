@@ -1,1 +1,1 @@
-# GeoAR
+This project is the result of my diploma thesis. It's an iOS app developed in Unity Engine use to visualize various geographical data on 2D and AR maps. For now, there are three geo modules - Traffic situation, Pollen risc and Waste containers in Prague. 
